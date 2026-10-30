@@ -68,13 +68,16 @@ def parse(path: Path) -> Script:
                 lines[-1].pause_after = max(lines[-1].pause_after, SCENE_PAUSE)
             continue
         if m := PAUSE_RE.match(s):
-            if lines:
-                lines[-1].pause_after = float(m["seconds"])
-                explicit_pause = True
+            if not lines:
+                raise ScriptError(f"{path}:{lineno}: pause before the first line")
+            lines[-1].pause_after = float(m["seconds"])
+            explicit_pause = True
             continue
         if m := VOICE_RE.match(s):
             voices[m["name"]] = _voice(path, lineno, m["name"], m["kind"], m["value"].strip(), voices)
             continue
+        if s.startswith("@voice"):
+            raise ScriptError(f"{path}:{lineno}: invalid voice definition (KIND must be ref, design, or preset): {s}")
         if m := LINE_RE.match(s):
             speaker = m["speaker"].strip()
             if speaker not in voices:

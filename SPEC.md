@@ -26,7 +26,7 @@ A castscript is a UTF-8 plain-text file (`*.cast.txt`) that says **who reads eac
 A line starting with `#` is ignored.
 
 ### Voices
-`@voice NAME = KIND: VALUE` defines a voice before it is used. Each `NAME` must be unique.
+`@voice NAME = KIND: VALUE` defines a voice before it is used. Each `NAME` must be unique. A line starting with `@voice` that does not match this form is an error.
 
 | KIND | VALUE | Meaning |
 |---|---|---|
@@ -38,7 +38,7 @@ A line starting with `#` is ignored.
 `NAME：TEXT` or `NAME（EMOTION）：TEXT`. Full-width and half-width colons and parentheses are both accepted. `NAME` must be a defined voice. `EMOTION` is free-form natural language (for example `愤怒地，语速加快`).
 
 ### Vocal events
-`[笑]`, `[叹气]`, `[咳嗽]`, and `[清嗓子]` (laugh, sigh, cough, clear throat) may appear inside `TEXT`. Engines that cannot render them drop them. Subtitles never include them.
+`[笑]`, `[叹气]`, `[咳嗽]`, and `[清嗓子]` (laugh, sigh, cough, clear throat) may appear inside `TEXT`. Engines that cannot render them drop them; a line that becomes empty is skipped and keeps only its pause. Subtitles never include them.
 
 ### Pauses
 | Source | Silence after the previous line |
@@ -46,7 +46,7 @@ A line starting with `#` is ignored.
 | next line follows directly | 0.4 s |
 | one or more blank lines | 0.8 s |
 | `---` (scene break) | 2.0 s |
-| `<pause N>` or `<停顿 N>` | exactly N seconds (overrides the above) |
+| `<pause N>` or `<停顿 N>` | exactly N seconds (overrides the above); an error before the first line |
 
 ### Long lines
 A renderer may split a long `TEXT` at sentence-ending punctuation (`。！？…`). Splits within one line add no pause.

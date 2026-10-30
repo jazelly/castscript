@@ -44,10 +44,12 @@ def render(script: Script, engine, out_base: Path) -> None:
         voice = script.voices[line.speaker]
         text = line.text if engine.supports_events else strip_events(line.text)
         line_started = time.perf_counter()
-        for chunk in split_text(text):
+        # A line of only vocal events is empty on engines without events; it keeps just its pause.
+        for chunk in split_text(text) if text else []:
             audio = engine.synthesize(chunk, voice, line.emotion)
             duration = audio.size / sr
-            cues.append((cursor, cursor + duration, strip_events(chunk)))
+            if subtitle := strip_events(chunk):
+                cues.append((cursor, cursor + duration, subtitle))
             pieces.append(audio)
             cursor += duration
         pieces.append(np.zeros(round(line.pause_after * sr), dtype=np.float32))
