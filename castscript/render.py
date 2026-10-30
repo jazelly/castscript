@@ -43,6 +43,7 @@ def render(script: Script, engine, out_base: Path) -> None:
     for i, line in enumerate(script.lines, 1):
         voice = script.voices[line.speaker]
         text = line.text if engine.supports_events else strip_events(line.text)
+        line_started = time.perf_counter()
         for chunk in split_text(text):
             audio = engine.synthesize(chunk, voice, line.emotion)
             duration = audio.size / sr
@@ -51,7 +52,8 @@ def render(script: Script, engine, out_base: Path) -> None:
             cursor += duration
         pieces.append(np.zeros(round(line.pause_after * sr), dtype=np.float32))
         cursor += line.pause_after
-        print(f"[{i}/{len(script.lines)}] line {line.lineno} {line.speaker}: {cursor:.1f}s", flush=True)
+        took = time.perf_counter() - line_started
+        print(f"[{i}/{len(script.lines)}] line {line.lineno} {line.speaker}: at {cursor:.1f}s, took {took:.1f}s", flush=True)
 
     out_base.parent.mkdir(parents=True, exist_ok=True)
     wav, mp3, srt = (out_base.with_suffix(s) for s in (".wav", ".mp3", ".srt"))

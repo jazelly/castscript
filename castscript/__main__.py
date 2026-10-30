@@ -12,7 +12,7 @@ from .script import parse
 def main() -> None:
     parser = argparse.ArgumentParser(prog="castscript")
     parser.add_argument("script", type=Path, help="*.cast.txt file")
-    parser.add_argument("--engine", choices=("breeze",), default="breeze")
+    parser.add_argument("--engine", choices=("breeze", "qwen"), default="breeze")
     parser.add_argument("--out", type=Path, help="output path without extension (default: next to the script)")
     parser.add_argument("--breeze-dir", type=Path, help="breeze-tts-mlx checkout")
     parser.add_argument("--breeze-checkpoint", type=Path, help="Breeze MLX checkpoint directory")
@@ -25,6 +25,10 @@ def main() -> None:
         if not args.breeze_dir or not args.breeze_checkpoint:
             parser.error("--engine breeze needs --breeze-dir and --breeze-checkpoint")
         engine = BreezeEngine(args.breeze_checkpoint, args.breeze_dir)
+    else:
+        from .engines.qwen import QwenEngine
+
+        engine = QwenEngine()
 
     out = args.out or args.script.with_name(args.script.name.removesuffix(".cast.txt"))
     render(script, engine, out)

@@ -17,7 +17,7 @@ The format is engine-independent. See [SPEC.md](SPEC.md) for the full format and
 | Engine | Status |
 |---|---|
 | Breeze TTS 2 (Apple Silicon, via [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx)) | supported |
-| Qwen3-TTS | planned |
+| Qwen3-TTS 1.7B (official `qwen-tts` package, Chinese) | supported |
 
 ## Usage (Breeze on Apple Silicon)
 
@@ -33,6 +33,14 @@ PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/ra
 ```
 
 This writes `examples/rain-night.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
+
+## Usage (Qwen3-TTS)
+
+Run inside an environment with the `qwen-tts` package installed. Models download from Hugging Face on first use: Base for `ref`, CustomVoice for `preset`, and VoiceDesign for `design`.
+
+```bash
+PYTHONPATH=. python -m castscript examples/rain-night-qwen.cast.txt --engine qwen
+```
 
 ## Licenses
 
