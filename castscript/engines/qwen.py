@@ -8,25 +8,32 @@ import numpy as np
 import torch
 
 from ..script import Voice
+from . import torch_device
 
 MODELS = {
     "ref": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
     "preset": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
     "design": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
 }
-LANGUAGE = "Chinese"
+LANGUAGES = {
+    "zh": "Chinese", "en": "English", "ja": "Japanese", "ko": "Korean", "de": "German",
+    "fr": "French", "ru": "Russian", "pt": "Portuguese", "es": "Spanish", "it": "Italian",
+}
 SEED = 42
 
 
 class QwenEngine:
-    supports_events = False
+    events = {}
     sample_rate = 24000
 
-    def __init__(self):
+    def __init__(self, language: str):
         from qwen_tts import Qwen3TTSModel
 
+        if language not in LANGUAGES:
+            raise ValueError(f"Qwen3-TTS supports languages {sorted(LANGUAGES)}, not '{language}'")
         self._model_cls = Qwen3TTSModel
-        self._device = "mps" if torch.backends.mps.is_available() else "cpu"
+        self._device = torch_device()
+        self.language = LANGUAGES[language]
         self._models = {}
         self._prompts = {}
 
@@ -46,12 +53,12 @@ class QwenEngine:
                 print(f"warning: Qwen cannot apply emotion to ref voice '{voice.name}'; ignoring '{emotion}'", file=sys.stderr)
             if voice.name not in self._prompts:
                 self._prompts[voice.name] = model.create_voice_clone_prompt(ref_audio=voice.value, ref_text=voice.ref_text)
-            wavs, sr = model.generate_voice_clone(text=text, language=LANGUAGE, voice_clone_prompt=self._prompts[voice.name])
+            wavs, sr = model.generate_voice_clone(text=text, language=self.language, voice_clone_prompt=self._prompts[voice.name])
         elif voice.kind == "preset":
-            wavs, sr = model.generate_custom_voice(text=text, language=LANGUAGE, speaker=voice.value, instruct=emotion)
+            wavs, sr = model.generate_custom_voice(text=text, language=self.language, speaker=voice.value, instruct=emotion)
         else:
             instruct = f"{voice.value}{'这句话的语气：' + emotion if emotion else ''}"
-            wavs, sr = model.generate_voice_design(text=text, language=LANGUAGE, instruct=instruct)
+            wavs, sr = model.generate_voice_design(text=text, language=self.language, instruct=instruct)
         if sr != self.sample_rate:
             raise ValueError(f"unexpected Qwen sample rate {sr}")
         return np.asarray(wavs[0], dtype=np.float32)

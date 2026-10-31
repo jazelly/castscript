@@ -7,14 +7,14 @@ from pathlib import Path
 
 import numpy as np
 
-from ..script import Voice
+from ..script import EVENTS, Voice
 
 SEED = 42
 GUIDED_CFG = 4.0
 
 
 class BreezeEngine:
-    supports_events = True
+    events = {e: f"[{e}]" for e in EVENTS}
 
     def __init__(self, checkpoint: Path, breeze_dir: Path):
         sys.path.insert(0, str(breeze_dir))

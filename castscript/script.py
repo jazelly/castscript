@@ -46,8 +46,13 @@ class Script:
     lines: list[Line]
 
 
+def convert_events(text: str, tags: dict[str, str]) -> str:
+    """Replace each vocal event with the engine's tag for it, dropping events the engine lacks."""
+    return EVENT_RE.sub(lambda m: tags.get(m[0][1:-1], ""), text).strip()
+
+
 def strip_events(text: str) -> str:
-    return EVENT_RE.sub("", text).strip()
+    return convert_events(text, {})
 
 
 def parse(path: Path) -> Script:

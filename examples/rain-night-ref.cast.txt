@@ -1,0 +1,14 @@
+# Chapter 1: Rainy Night, variant using only ref voices for clone-only engines.
+@voice 旁白 = ref: voices/01_storyteller_raspy.wav
+@voice 林风 = ref: voices/22_wuxia_hero.wav
+@voice 掌柜 = ref: voices/10_kind_grandpa.wav
+
+旁白：那天夜里，雨下得很大。他推开客栈的门，抖了抖身上的水。
+林风（低声，疲惫）：掌柜的，还有空房吗？
+旁白：掌柜抬起头，愣了一下。
+<pause 1>
+掌柜（惊讶转为热情）：有，有，客官里边请！[笑]
+
+---
+旁白：第二天清晨，雨停了。林风推开窗，长长地叹了口气。
+林风（愤怒，咬牙切齿）：这笔账，我迟早要跟他们算清楚！

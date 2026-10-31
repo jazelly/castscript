@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from .script import Script, strip_events
+from .script import Script, convert_events, strip_events
 
 MAX_CHARS = 150
 SENTENCE_RE = re.compile(r"(?<=[。！？!?…])")
@@ -42,9 +42,9 @@ def render(script: Script, engine, out_base: Path) -> None:
 
     for i, line in enumerate(script.lines, 1):
         voice = script.voices[line.speaker]
-        text = line.text if engine.supports_events else strip_events(line.text)
+        text = convert_events(line.text, engine.events)
         line_started = time.perf_counter()
-        # A line of only vocal events is empty on engines without events; it keeps just its pause.
+        # A line of only unsupported vocal events is empty; it keeps just its pause.
         for chunk in split_text(text) if text else []:
             audio = engine.synthesize(chunk, voice, line.emotion)
             duration = audio.size / sr

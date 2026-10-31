@@ -38,7 +38,7 @@ A line starting with `#` is ignored.
 `NAME：TEXT` or `NAME（EMOTION）：TEXT`. Full-width and half-width colons and parentheses are both accepted. `NAME` must be a defined voice. `EMOTION` is free-form natural language (for example `愤怒地，语速加快`).
 
 ### Vocal events
-`[笑]`, `[叹气]`, `[咳嗽]`, and `[清嗓子]` (laugh, sigh, cough, clear throat) may appear inside `TEXT`. Engines that cannot render them drop them; a line that becomes empty is skipped and keeps only its pause. Subtitles never include them.
+`[笑]`, `[叹气]`, `[咳嗽]`, and `[清嗓子]` (laugh, sigh, cough, clear throat) may appear inside `TEXT`. Each engine translates them to its own tags and drops the ones it cannot render; a line that becomes empty is skipped and keeps only its pause. Subtitles never include them.
 
 ### Pauses
 | Source | Silence after the previous line |
@@ -56,13 +56,18 @@ Any other non-empty line is an error, and the error names the line number.
 
 ## Engine support
 
-| Feature | Breeze TTS 2 | Qwen3-TTS |
-|---|---|---|
-| `ref` voice | yes | yes (Base model) |
-| `design` voice | yes | yes (VoiceDesign model) |
-| `preset` voice | no, error | yes (CustomVoice model) |
-| emotion | yes, including with `ref` | yes with `design`/`preset`; not with `ref` |
-| vocal events | yes | not documented, dropped |
-| pauses | inserted by the renderer | inserted by the renderer |
+| Engine | `ref` | `design` | `preset` | Emotion | Vocal events |
+|---|---|---|---|---|---|
+| Breeze TTS 2 | yes | yes | no | yes, including with `ref` | all four |
+| Qwen3-TTS | yes (Base model) | yes (VoiceDesign model) | yes (CustomVoice model) | with `design`/`preset`; not with `ref` | none |
+| Chatterbox Multilingual V3 | yes | no | no | no | none |
+| OmniVoice | yes | attribute list only, e.g. `男，老年，低音调` | no | no | `[笑]` `[叹气]` |
+| KittenTTS 2 | yes | no | yes, e.g. `Chinese`, `Bruno` | only `angry` `contemplative` `excited` `joyful` `mundane` `nervous` `sad` `stern` `surprised` `tender` | `[笑]` `[叹气]` |
+| Kokoro-82M | no | no | yes, e.g. `zf_xiaoxiao`, `af_heart` | no | none |
+| Pocket TTS | yes (gated model) | no | yes, e.g. `alba` | no | none |
+| VoxCPM2 | yes | yes | no | yes, including with `ref` | none |
+| IndexTTS-2.5 | yes | no | no | yes | none |
+| Audio8-TTS 0.6B | yes | no | no | no | none |
+| dots.tts | yes | no | no | no | none |
 
-When an engine cannot honor an emotion, it warns and renders the line without the emotion.
+Pauses are inserted by the renderer for every engine. Using a voice kind an engine lacks is an error. When an engine cannot honor an emotion, it warns and renders the line without the emotion.

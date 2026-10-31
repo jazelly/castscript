@@ -2,6 +2,11 @@
 
 A plain-text format for multi-voice audiobooks and radio plays, plus a renderer that turns it into MP3 and SRT with a local TTS engine.
 
+- **Write like a script.** One `角色（情绪）：台词` line per utterance; no markup to learn.
+- **Per-character voices.** Clone from a reference WAV, design from a text description, or pick an engine preset.
+- **Emotion, vocal events, pauses.** `（低声，疲惫）`, `[叹气]`, and blank-line / `---` / `<pause N>` timing.
+- **Engine-independent, fully local.** The same script renders on any of eleven local TTS engines; outputs MP3 and SRT subtitles.
+
 ```
 @voice 旁白 = ref: voices/narrator.wav
 @voice 林风 = ref: voices/hero.wav
@@ -14,34 +19,82 @@ The format is engine-independent. See [SPEC.md](SPEC.md) for the full format and
 
 ## Engines
 
-| Engine | Status |
-|---|---|
-| Breeze TTS 2 (Apple Silicon, via [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx)) | supported |
-| Qwen3-TTS 1.7B (official `qwen-tts` package, Chinese) | supported |
+castscript runs inside the engine's own Python environment, so engines with conflicting dependencies never share one. Give each engine its own virtual environment and install what the table lists. "Apple Silicon" says how the engine ran on an M3 Ultra.
 
-## Usage (Breeze on Apple Silicon)
+| `--engine` | Engine | Install | Apple Silicon |
+|---|---|---|---|
+| `breeze` | Breeze TTS 2 | a [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx) checkout | MLX |
+| `qwen` | Qwen3-TTS 1.7B | `qwen-tts` | MPS |
+| `chatterbox` | Chatterbox Multilingual V3 | `"chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git"` | MPS |
+| `omnivoice` | OmniVoice | `omnivoice` | MPS |
+| `kitten` | KittenTTS 2 | `"kittenml[mlx]"` on a Mac, `kittenml` elsewhere | MLX |
+| `kokoro` | Kokoro-82M | `"kokoro>=0.9.4" "misaki[zh]"` | CPU |
+| `pocket` | Pocket TTS | `pocket-tts` | CPU |
+| `voxcpm` | VoxCPM2 | `voxcpm` | MPS |
+| `indextts` | IndexTTS-2.5 | an [index-tts](https://github.com/index-tts/index-tts) checkout, set up with `uv sync` and `hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints` | MPS |
+| `audio8` | Audio8-TTS Realistic 0.6B | `torch torchaudio "transformers>=4.57,<5" librosa` | MPS |
+| `dots` | dots.tts | `dots.tts` (see below) | CPU only, too slow for real use |
 
-castscript runs inside the engine's Python environment.
+Every engine also needs `soundfile`, and the renderer needs `ffmpeg` on `PATH` (`brew install ffmpeg`, or `winget install ffmpeg` on Windows). Models download from Hugging Face on first use.
 
-1. Set up [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx) and download its checkpoint. Also install `ffmpeg` (`brew install ffmpeg`).
-2. Put reference voices next to your script. Each `voice.wav` needs a `voice.txt` that contains its exact transcript.
-3. Render:
+On Windows and Linux, engines use an NVIDIA GPU through CUDA when PyTorch has it, and the CPU otherwise. Breeze runs only on Apple Silicon. The engines were run only on macOS; the Windows paths are untested.
+
+## Usage
+
+1. Put reference voices next to your script. Each `voice.wav` needs a `voice.txt` that contains its exact transcript.
+2. From the castscript checkout, render with the engine environment's Python:
+
+```bash
+PYTHONPATH=. path/to/engine-venv/bin/python -m castscript examples/rain-night-ref.cast.txt --engine chatterbox
+```
+
+On Windows:
+
+```bat
+set PYTHONPATH=.
+set PYTHONUTF8=1
+path\to\engine-venv\Scripts\python -m castscript examples\rain-night-ref.cast.txt --engine chatterbox
+```
+
+This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script. `--out PATH` picks another location, without an extension.
+
+`--language` (default `zh`) sets the language for the engines that need one: Qwen3-TTS, Chatterbox, OmniVoice, KittenTTS, Kokoro, Pocket TTS, IndexTTS, and dots.tts.
+
+Each example uses the voice kinds its engines support:
+
+| Example | Voice kinds | Engines |
+|---|---|---|
+| `rain-night.cast.txt` | `ref`, `design` | `breeze`, `voxcpm` |
+| `rain-night-qwen.cast.txt` | `ref`, `design`, `preset` | `qwen` |
+| `rain-night-ref.cast.txt` | `ref` only | `chatterbox`, `omnivoice`, `kitten`, `voxcpm`, `indextts`, `audio8`, `dots`, `qwen`, `breeze` |
+
+## Engine notes
+
+**Breeze TTS 2:**
 
 ```bash
 PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/rain-night.cast.txt \
   --breeze-dir ../breeze-tts-mlx --breeze-checkpoint ../breeze-tts-mlx/chkpt-mlx-int8
 ```
 
-This writes `examples/rain-night.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
+**Qwen3-TTS** loads one model per voice kind: Base for `ref`, CustomVoice for `preset`, and VoiceDesign for `design`.
 
-## Usage (Qwen3-TTS)
-
-Run inside an environment with the `qwen-tts` package installed. Models download from Hugging Face on first use: Base for `ref`, CustomVoice for `preset`, and VoiceDesign for `design`.
+**IndexTTS-2.5** needs `--index-dir` pointing at the checkout, and runs with that checkout's `.venv`:
 
 ```bash
-PYTHONPATH=. python -m castscript examples/rain-night-qwen.cast.txt --engine qwen
+PYTHONPATH=. ../index-tts/.venv/bin/python -m castscript examples/rain-night-ref.cast.txt --engine indextts --index-dir ../index-tts
 ```
+
+**OmniVoice** `design` voices take only its attribute vocabulary, such as `男，老年，低音调` or `female, low pitch, british accent`.
+
+**KittenTTS 2** emotions are a fixed list of English words; see [SPEC.md](SPEC.md).
+
+**Kokoro** has preset voices only. Chinese presets start with `zf_` or `zm_`. Languages other than English and Chinese need [espeak-ng](https://github.com/espeak-ng/espeak-ng).
+
+**Pocket TTS** supports English, French, German, Portuguese, Italian, Spanish, and Dutch, not Chinese. Its built-in presets work as is. Cloning a `ref` voice needs the gated model: accept its terms at [huggingface.co/kyutai/pocket-tts](https://huggingface.co/kyutai/pocket-tts) and log in with `hf auth login`.
+
+**dots.tts** depends on `pynini`, which has no macOS or Windows wheel. On a Mac, run `brew install openfst`, then install with `CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib`. Pin the versions from upstream's `constraints/recommended.txt` (`torch==2.8.0 torchaudio==2.8.0 transformers==4.57.0`). Without CUDA it runs single-threaded on the CPU.
 
 ## Licenses
 
-castscript is MIT-licensed. TTS engines and model weights carry their own licenses. Breeze TTS 2 weights and their outputs are for research and non-commercial use only.
+castscript is MIT-licensed. TTS engines and model weights carry their own licenses; check each before commercial use. In particular, Breeze TTS 2 weights and their outputs are for research and non-commercial use only, and IndexTTS weights are under the bilibili Model Use License Agreement.
