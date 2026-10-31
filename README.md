@@ -19,25 +19,41 @@ The format is engine-independent. See [SPEC.md](SPEC.md) for the full format and
 
 ## Engines
 
-castscript runs inside the engine's own Python environment, so engines with conflicting dependencies never share one. Give each engine its own virtual environment and install what the table lists. "Apple Silicon" says how the engine ran on an M3 Ultra.
+castscript runs inside the engine's own Python environment, so engines with conflicting dependencies never share one. Give each engine its own virtual environment and install what the table lists.
 
-| `--engine` | Engine | Install | Apple Silicon |
-|---|---|---|---|
-| `breeze` | Breeze TTS 2 | a [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx) checkout | MLX |
-| `qwen` | Qwen3-TTS 1.7B | `qwen-tts` | MPS |
-| `chatterbox` | Chatterbox Multilingual V3 | `"chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git"` | MPS |
-| `omnivoice` | OmniVoice | `omnivoice` | MPS |
-| `kitten` | KittenTTS 2 | `"kittenml[mlx]"` on a Mac, `kittenml` elsewhere | MLX |
-| `kokoro` | Kokoro-82M | `"kokoro>=0.9.4" "misaki[zh]"` | CPU |
-| `pocket` | Pocket TTS | `pocket-tts` | CPU |
-| `voxcpm` | VoxCPM2 | `voxcpm` | MPS |
-| `indextts` | IndexTTS-2.5 | an [index-tts](https://github.com/index-tts/index-tts) checkout, set up with `uv sync` and `hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints` | MPS |
-| `audio8` | Audio8-TTS Realistic 0.6B | `torch torchaudio "transformers>=4.57,<5" librosa` | MPS |
-| `dots` | dots.tts | `dots.tts` (see below) | CPU only, too slow for real use |
+| `--engine` | Engine | Install |
+|---|---|---|
+| `breeze` | Breeze TTS 2 | a [breeze-tts-mlx](https://github.com/rishikksh20/breeze-tts-mlx) checkout |
+| `qwen` | Qwen3-TTS 1.7B | `qwen-tts` |
+| `chatterbox` | Chatterbox Multilingual V3 | `"chatterbox-tts @ git+https://github.com/resemble-ai/chatterbox.git"` |
+| `omnivoice` | OmniVoice | `omnivoice` |
+| `kitten` | KittenTTS 2 | `"kittenml[mlx]"` on a Mac, `kittenml` elsewhere |
+| `kokoro` | Kokoro-82M | `"kokoro>=0.9.4" "misaki[zh]"` |
+| `pocket` | Pocket TTS | `pocket-tts` |
+| `voxcpm` | VoxCPM2 | `voxcpm` |
+| `indextts` | IndexTTS-2.5 | an [index-tts](https://github.com/index-tts/index-tts) checkout, set up with `uv sync` and `hf download IndexTeam/IndexTTS-2.5 --local-dir=checkpoints` |
+| `audio8` | Audio8-TTS Realistic 0.6B | `torch torchaudio "transformers>=4.57,<5" librosa` |
+| `dots` | dots.tts | `dots.tts` (see below) |
 
 Every engine also needs `soundfile`, and the renderer needs `ffmpeg` on `PATH` (`brew install ffmpeg`, or `winget install ffmpeg` on Windows). Models download from Hugging Face on first use.
 
-On Windows and Linux, engines use an NVIDIA GPU through CUDA when PyTorch has it, and the CPU otherwise. Breeze runs only on Apple Silicon. The engines were run only on macOS; the Windows paths are untested.
+### Platforms
+
+macOS on Apple Silicon is the primary platform: every ✅ in its column rendered a multi-voice script on an M3 Ultra, using the backend shown. On Windows, engines use an NVIDIA GPU through CUDA when PyTorch has it, and the CPU otherwise; that column follows what each engine supports upstream and has not been tested.
+
+| `--engine` | macOS (Apple Silicon) | Windows |
+|---|---|---|
+| `breeze` | ✅ MLX | ❌ MLX is Apple-only |
+| `qwen` | ✅ MPS | ✅ CUDA / CPU |
+| `chatterbox` | ✅ MPS | ✅ CUDA / CPU |
+| `omnivoice` | ✅ MPS | ✅ CUDA / CPU |
+| `kitten` | ✅ MLX | ✅ ONNX |
+| `kokoro` | ✅ CPU | ✅ CUDA / CPU |
+| `pocket` | ✅ CPU | ✅ CPU |
+| `voxcpm` | ✅ MPS | ✅ CUDA / CPU |
+| `indextts` | ✅ MPS | ✅ CUDA / CPU |
+| `audio8` | ✅ MPS | ✅ CUDA / CPU |
+| `dots` | ❌ runs, but single-threaded CPU is too slow to use | ✅ CUDA; install `pynini` from conda-forge |
 
 ## Usage
 
@@ -93,7 +109,7 @@ PYTHONPATH=. ../index-tts/.venv/bin/python -m castscript examples/rain-night-ref
 
 **Pocket TTS** supports English, French, German, Portuguese, Italian, Spanish, and Dutch, not Chinese. Its built-in presets work as is. Cloning a `ref` voice needs the gated model: accept its terms at [huggingface.co/kyutai/pocket-tts](https://huggingface.co/kyutai/pocket-tts) and log in with `hf auth login`.
 
-**dots.tts** depends on `pynini`, which has no macOS or Windows wheel. On a Mac, run `brew install openfst`, then install with `CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib`. Pin the versions from upstream's `constraints/recommended.txt` (`torch==2.8.0 torchaudio==2.8.0 transformers==4.57.0`). Without CUDA it runs single-threaded on the CPU.
+**dots.tts** depends on `pynini`, which has no macOS or Windows wheel on PyPI; on Windows, install it with `conda install -c conda-forge pynini`. On a Mac, run `brew install openfst`, then install with `CPATH=/opt/homebrew/include LIBRARY_PATH=/opt/homebrew/lib`. Pin the versions from upstream's `constraints/recommended.txt` (`torch==2.8.0 torchaudio==2.8.0 transformers==4.57.0`). Without CUDA it runs single-threaded on the CPU.
 
 ## Licenses
 
