@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:05,760
+It was raining hard that night. He pushed open the inn door and shook the water off.
+
+2
+00:00:06,160 --> 00:00:08,720
+Innkeeper, do you have a room?
+
+3
+00:00:09,120 --> 00:00:12,160
+The innkeeper looked up, startled for a moment.
+
+4
+00:00:13,160 --> 00:00:14,760
+Yes, yes, come right in!
+
+5
+00:00:16,760 --> 00:00:22,520
+By morning, the rain had stopped. Lin opened the window and let out a long sigh.
+
+6
+00:00:22,920 --> 00:00:25,480
+I'll settle this score with them sooner or later!

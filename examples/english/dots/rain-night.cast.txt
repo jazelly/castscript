@@ -1,0 +1,3 @@
+@voice Lin = ref: ../../voices/english/swordsman.wav
+
+Lin: Innkeeper, do you have a room?

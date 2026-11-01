@@ -1,13 +1,12 @@
-# Chapter 1: Rainy Night, Qwen3-TTS variant using all three voice kinds.
-@voice 旁白 = ref: voices/01_storyteller_raspy.wav
-@voice 林风 = design: 一位三十多岁的江湖侠客，男声，声音爽朗豪迈，语气洒脱。
-@voice 掌柜 = preset: Uncle_Fu
+@voice 旁白 = ref: ../../voices/chinese/01_storyteller_raspy.wav
+@voice 林风 = ref: ../../voices/chinese/22_wuxia_hero.wav
+@voice 掌柜 = design: 一位五十多岁的客栈掌柜，男声，热情圆滑，语速稍快。
 
 旁白：那天夜里，雨下得很大。他推开客栈的门，抖了抖身上的水。
 林风（低声，疲惫）：掌柜的，还有空房吗？
 旁白：掌柜抬起头，愣了一下。
 <pause 1>
-掌柜（惊讶转为热情）：有，有，客官里边请！
+掌柜（惊讶转为热情）：有，有，客官里边请！[笑]
 
 ---
 旁白：第二天清晨，雨停了。林风推开窗，长长地叹了口气。

@@ -61,7 +61,7 @@ macOS on Apple Silicon is the primary platform: every ✅ in its column rendered
 2. From the castscript checkout, render with the engine environment's Python:
 
 ```bash
-PYTHONPATH=. path/to/engine-venv/bin/python -m castscript examples/rain-night-ref.cast.txt --engine chatterbox
+PYTHONPATH=. path/to/engine-venv/bin/python -m castscript examples/chinese/chatterbox/rain-night.cast.txt --engine chatterbox
 ```
 
 On Windows:
@@ -69,27 +69,23 @@ On Windows:
 ```bat
 set PYTHONPATH=.
 set PYTHONUTF8=1
-path\to\engine-venv\Scripts\python -m castscript examples\rain-night-ref.cast.txt --engine chatterbox
+path\to\engine-venv\Scripts\python -m castscript examples\chinese\chatterbox\rain-night.cast.txt --engine chatterbox
 ```
 
 This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script. `--out PATH` picks another location, without an extension.
 
 `--language` (default `zh`) sets the language for the engines that need one: Qwen3-TTS, Chatterbox, OmniVoice, KittenTTS, Kokoro, Pocket TTS, IndexTTS, and dots.tts.
 
-Each example uses the voice kinds its engines support:
+## Examples
 
-| Example | Voice kinds | Engines |
-|---|---|---|
-| `rain-night.cast.txt` | `ref`, `design` | `breeze`, `voxcpm` |
-| `rain-night-qwen.cast.txt` | `ref`, `design`, `preset` | `qwen` |
-| `rain-night-ref.cast.txt` | `ref` only | `chatterbox`, `omnivoice`, `kitten`, `voxcpm`, `indextts`, `audio8`, `dots`, `qwen`, `breeze` |
+[examples/](examples/) has a Chinese and an English rendering of the same short scene for every engine: the input script, the MP3, and the SRT, so you can hear each engine before installing it.
 
 ## Engine notes
 
 **Breeze TTS 2:**
 
 ```bash
-PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/rain-night.cast.txt \
+PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/chinese/breeze/rain-night.cast.txt \
   --breeze-dir ../breeze-tts-mlx --breeze-checkpoint ../breeze-tts-mlx/chkpt-mlx-int8
 ```
 
@@ -98,14 +94,14 @@ PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/ra
 **IndexTTS-2.5** needs `--index-dir` pointing at the checkout, and runs with that checkout's `.venv`:
 
 ```bash
-PYTHONPATH=. ../index-tts/.venv/bin/python -m castscript examples/rain-night-ref.cast.txt --engine indextts --index-dir ../index-tts
+PYTHONPATH=. ../index-tts/.venv/bin/python -m castscript examples/chinese/indextts/rain-night.cast.txt --engine indextts --index-dir ../index-tts
 ```
 
 **OmniVoice** `design` voices take only its attribute vocabulary, such as `男，老年，低音调` or `female, low pitch, british accent`.
 
 **KittenTTS 2** emotions are a fixed list of English words; see [SPEC.md](SPEC.md).
 
-**Kokoro** has preset voices only. Chinese presets start with `zf_` or `zm_`. Languages other than English and Chinese need [espeak-ng](https://github.com/espeak-ng/espeak-ng).
+**Kokoro** has preset voices only. Chinese presets start with `zf_` or `zm_`. English needs spaCy's `en_core_web_sm` model installed in the environment. Languages other than English and Chinese need [espeak-ng](https://github.com/espeak-ng/espeak-ng).
 
 **Pocket TTS** supports English, French, German, Portuguese, Italian, Spanish, and Dutch, not Chinese. Its built-in presets work as is. Cloning a `ref` voice needs the gated model: accept its terms at [huggingface.co/kyutai/pocket-tts](https://huggingface.co/kyutai/pocket-tts) and log in with `hf auth login`.
 

@@ -1,5 +1,6 @@
 __pycache__/
-examples/voices/
-examples/*.wav
-examples/*.mp3
-examples/*.srt
+# Local voice collection; examples/voices/{chinese,english}/ are tracked.
+examples/voices/*.wav
+examples/voices/*.txt
+examples/chinese/*/*.wav
+examples/english/*/*.wav

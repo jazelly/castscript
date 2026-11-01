@@ -1,0 +1,3 @@
+@voice 林风 = ref: ../../voices/chinese/22_wuxia_hero.wav
+
+林风：掌柜的，还有空房吗？

@@ -1,8 +1,6 @@
-# Chapter 1: Rainy Night
-# Voices under examples/voices/ are not in the repo; generate your own (see README).
-@voice 旁白 = ref: voices/01_storyteller_raspy.wav
-@voice 林风 = ref: voices/22_wuxia_hero.wav
-@voice 掌柜 = design: 一位五十多岁的客栈掌柜，男声，热情圆滑，语速稍快。
+@voice 旁白 = preset: zm_yunjian
+@voice 林风 = preset: zm_yunxi
+@voice 掌柜 = preset: zm_yunyang
 
 旁白：那天夜里，雨下得很大。他推开客栈的门，抖了抖身上的水。
 林风（低声，疲惫）：掌柜的，还有空房吗？
