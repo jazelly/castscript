@@ -1,0 +1,14 @@
+@voice Narrator = ref: ../../voices/english/narrator.wav
+@voice Villain = ref: ../../voices/english/villain.wav
+@voice Heroine = ref: ../../voices/english/heroine.wav
+
+Narrator: In the ruined temple outside the city, a single oil lamp was burning.
+Villain (stern): Miss Shen, so you came after all. [笑]
+Heroine (stern): Let the child go. I'm the one you want.
+Villain (contemplative): Let him go? Do you know how many years I've waited for this day?
+<pause 1>
+Heroine (angry): Ten years of debt, settled tonight!
+
+---
+Narrator: Before she finished, a gust of wind blew out the lamp. In the dark, there was only the sound of blades leaving their sheaths.
+Villain (nervous): Your... your sword, how can it be so fast!

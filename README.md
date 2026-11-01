@@ -78,7 +78,7 @@ This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
 
 ## Examples
 
-[examples/](examples/) has a Chinese and an English rendering of the same short scene for every engine: the input script, the MP3, and the SRT, so you can hear each engine before installing it.
+[examples/](examples/) has three short scenes rendered by every engine in Chinese and in English: the input scripts, the MP3s, and the SRTs, so you can hear each engine before installing it.
 
 ## Engine notes
 

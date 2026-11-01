@@ -1,3 +1,13 @@
+@voice Narrator = ref: ../../voices/english/narrator.wav
 @voice Lin = ref: ../../voices/english/swordsman.wav
+@voice Innkeeper = ref: ../../voices/english/innkeeper.wav
 
-Lin: Innkeeper, do you have a room?
+Narrator: It was raining hard that night. He pushed open the inn door and shook the water off.
+Lin (low, tired): Innkeeper, do you have a room?
+Narrator: The innkeeper looked up, startled for a moment.
+<pause 1>
+Innkeeper (surprised, then warm): Yes, yes, come right in! [笑]
+
+---
+Narrator: By morning, the rain had stopped. Lin opened the window and let out a long sigh.
+Lin (angry, through gritted teeth): I'll settle this score with them sooner or later!

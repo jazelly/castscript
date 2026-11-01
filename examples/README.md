@@ -1,23 +1,27 @@
 # Examples
 
-The same short scene, rendered by every engine in Chinese and in English. Each engine folder holds the input script (`rain-night.cast.txt`) and its unedited output (`rain-night.mp3` and `rain-night.srt`), so you can hear how each engine performs before installing it.
+Three short scenes, rendered by every engine in Chinese and in English. Each engine folder holds the input scripts (`*.cast.txt`) and their unedited outputs (`*.mp3` and `*.srt`), so you can hear how each engine performs before installing it.
 
-All outputs were rendered on an M3 Ultra (macOS). "Time" is how long rendering took, followed by the length of the audio.
+- **Rain night**: a narrator, a swordsman, and an innkeeper at an inn on a rainy night.
+- **Standoff**: a villain and a swordswoman face off in a ruined temple.
+- **Bedtime**: a grandmother tells her granddaughter a story, with a cough, a laugh, and a sigh.
+
+All outputs were rendered on an M3 Ultra (macOS). Below each scene is how long rendering took, followed by the length of the audio.
 
 ## Chinese
 
-| Engine | Voices | Script | Audio | Subtitles | Time |
-|---|---|---|---|---|---|
-| Breeze TTS 2 | ref, design | [script](chinese/breeze/rain-night.cast.txt) | [mp3](chinese/breeze/rain-night.mp3) | [srt](chinese/breeze/rain-night.srt) | 21s for 25s |
-| Qwen3-TTS | ref, design, preset | [script](chinese/qwen/rain-night.cast.txt) | [mp3](chinese/qwen/rain-night.mp3) | [srt](chinese/qwen/rain-night.srt) | 117s for 25s |
-| Chatterbox V3 | ref | [script](chinese/chatterbox/rain-night.cast.txt) | [mp3](chinese/chatterbox/rain-night.mp3) | [srt](chinese/chatterbox/rain-night.srt) | 60s for 29s |
-| OmniVoice | ref, design | [script](chinese/omnivoice/rain-night.cast.txt) | [mp3](chinese/omnivoice/rain-night.mp3) | [srt](chinese/omnivoice/rain-night.srt) | 23s for 27s |
-| KittenTTS 2 | ref | [script](chinese/kitten/rain-night.cast.txt) | [mp3](chinese/kitten/rain-night.mp3) | [srt](chinese/kitten/rain-night.srt) | 9s for 30s |
-| Kokoro | preset | [script](chinese/kokoro/rain-night.cast.txt) | [mp3](chinese/kokoro/rain-night.mp3) | [srt](chinese/kokoro/rain-night.srt) | 7s for 28s |
-| VoxCPM2 | ref, design | [script](chinese/voxcpm/rain-night.cast.txt) | [mp3](chinese/voxcpm/rain-night.mp3) | [srt](chinese/voxcpm/rain-night.srt) | 20s for 24s |
-| IndexTTS-2.5 | ref | [script](chinese/indextts/rain-night.cast.txt) | [mp3](chinese/indextts/rain-night.mp3) | [srt](chinese/indextts/rain-night.srt) | 73s for 30s |
-| Audio8-TTS | ref | [script](chinese/audio8/rain-night.cast.txt) | [mp3](chinese/audio8/rain-night.mp3) | [srt](chinese/audio8/rain-night.srt) | 34s for 30s |
-| dots.tts | ref | [script](chinese/dots/rain-night.cast.txt) | [mp3](chinese/dots/rain-night.mp3) | [srt](chinese/dots/rain-night.srt) | 144s for 2.6s, one line only |
+| Engine | Voices | Rain night | Standoff | Bedtime |
+|---|---|---|---|---|
+| Breeze TTS 2 | ref, design | [mp3](chinese/breeze/rain-night.mp3) · [srt](chinese/breeze/rain-night.srt) · [script](chinese/breeze/rain-night.cast.txt)<br>21s for 25s | [mp3](chinese/breeze/standoff.mp3) · [srt](chinese/breeze/standoff.srt) · [script](chinese/breeze/standoff.cast.txt)<br>28s for 34s | [mp3](chinese/breeze/bedtime.mp3) · [srt](chinese/breeze/bedtime.srt) · [script](chinese/breeze/bedtime.cast.txt)<br>33s for 34s |
+| Qwen3-TTS | ref, design, preset | [mp3](chinese/qwen/rain-night.mp3) · [srt](chinese/qwen/rain-night.srt) · [script](chinese/qwen/rain-night.cast.txt)<br>117s for 25s | [mp3](chinese/qwen/standoff.mp3) · [srt](chinese/qwen/standoff.srt) · [script](chinese/qwen/standoff.cast.txt)<br>116s for 30s | [mp3](chinese/qwen/bedtime.mp3) · [srt](chinese/qwen/bedtime.srt) · [script](chinese/qwen/bedtime.cast.txt)<br>172s for 32s |
+| Chatterbox V3 | ref | [mp3](chinese/chatterbox/rain-night.mp3) · [srt](chinese/chatterbox/rain-night.srt) · [script](chinese/chatterbox/rain-night.cast.txt)<br>60s for 29s | [mp3](chinese/chatterbox/standoff.mp3) · [srt](chinese/chatterbox/standoff.srt) · [script](chinese/chatterbox/standoff.cast.txt)<br>60s for 32s | [mp3](chinese/chatterbox/bedtime.mp3) · [srt](chinese/chatterbox/bedtime.srt) · [script](chinese/chatterbox/bedtime.cast.txt)<br>60s for 29s |
+| OmniVoice | ref, design | [mp3](chinese/omnivoice/rain-night.mp3) · [srt](chinese/omnivoice/rain-night.srt) · [script](chinese/omnivoice/rain-night.cast.txt)<br>23s for 27s | [mp3](chinese/omnivoice/standoff.mp3) · [srt](chinese/omnivoice/standoff.srt) · [script](chinese/omnivoice/standoff.cast.txt)<br>27s for 35s | [mp3](chinese/omnivoice/bedtime.mp3) · [srt](chinese/omnivoice/bedtime.srt) · [script](chinese/omnivoice/bedtime.cast.txt)<br>33s for 37s |
+| KittenTTS 2 | ref | [mp3](chinese/kitten/rain-night.mp3) · [srt](chinese/kitten/rain-night.srt) · [script](chinese/kitten/rain-night.cast.txt)<br>9s for 30s | [mp3](chinese/kitten/standoff.mp3) · [srt](chinese/kitten/standoff.srt) · [script](chinese/kitten/standoff.cast.txt)<br>11s for 38s | [mp3](chinese/kitten/bedtime.mp3) · [srt](chinese/kitten/bedtime.srt) · [script](chinese/kitten/bedtime.cast.txt)<br>12s for 35s |
+| Kokoro | preset | [mp3](chinese/kokoro/rain-night.mp3) · [srt](chinese/kokoro/rain-night.srt) · [script](chinese/kokoro/rain-night.cast.txt)<br>7s for 28s | [mp3](chinese/kokoro/standoff.mp3) · [srt](chinese/kokoro/standoff.srt) · [script](chinese/kokoro/standoff.cast.txt)<br>11s for 33s | [mp3](chinese/kokoro/bedtime.mp3) · [srt](chinese/kokoro/bedtime.srt) · [script](chinese/kokoro/bedtime.cast.txt)<br>8s for 31s |
+| VoxCPM2 | ref, design | [mp3](chinese/voxcpm/rain-night.mp3) · [srt](chinese/voxcpm/rain-night.srt) · [script](chinese/voxcpm/rain-night.cast.txt)<br>20s for 24s | [mp3](chinese/voxcpm/standoff.mp3) · [srt](chinese/voxcpm/standoff.srt) · [script](chinese/voxcpm/standoff.cast.txt)<br>24s for 33s | [mp3](chinese/voxcpm/bedtime.mp3) · [srt](chinese/voxcpm/bedtime.srt) · [script](chinese/voxcpm/bedtime.cast.txt)<br>29s for 30s |
+| IndexTTS-2.5 | ref | [mp3](chinese/indextts/rain-night.mp3) · [srt](chinese/indextts/rain-night.srt) · [script](chinese/indextts/rain-night.cast.txt)<br>73s for 30s | [script](chinese/indextts/standoff.cast.txt) · failed, see notes | [mp3](chinese/indextts/bedtime.mp3) · [srt](chinese/indextts/bedtime.srt) · [script](chinese/indextts/bedtime.cast.txt)<br>69s for 31s |
+| Audio8-TTS | ref | [mp3](chinese/audio8/rain-night.mp3) · [srt](chinese/audio8/rain-night.srt) · [script](chinese/audio8/rain-night.cast.txt)<br>34s for 30s | [mp3](chinese/audio8/standoff.mp3) · [srt](chinese/audio8/standoff.srt) · [script](chinese/audio8/standoff.cast.txt)<br>40s for 38s | [mp3](chinese/audio8/bedtime.mp3) · [srt](chinese/audio8/bedtime.srt) · [script](chinese/audio8/bedtime.cast.txt)<br>43s for 34s |
+| dots.tts | ref | [mp3](chinese/dots/rain-night.mp3) · [srt](chinese/dots/rain-night.srt) · [script](chinese/dots/rain-night.cast.txt)<br>38 min for 31s | [mp3](chinese/dots/standoff.mp3) · [srt](chinese/dots/standoff.srt) · [script](chinese/dots/standoff.cast.txt)<br>41 min for 36s | [mp3](chinese/dots/bedtime.mp3) · [srt](chinese/dots/bedtime.srt) · [script](chinese/dots/bedtime.cast.txt)<br>57 min for 36s |
 
 Pocket TTS does not speak Chinese.
 
@@ -25,26 +29,27 @@ Pocket TTS does not speak Chinese.
 
 Render these with `--language en`.
 
-| Engine | Voices | Script | Audio | Subtitles | Time |
-|---|---|---|---|---|---|
-| Qwen3-TTS | ref, design, preset | [script](english/qwen/rain-night.cast.txt) | [mp3](english/qwen/rain-night.mp3) | [srt](english/qwen/rain-night.srt) | 123s for 27s |
-| Chatterbox V3 | ref | [script](english/chatterbox/rain-night.cast.txt) | [mp3](english/chatterbox/rain-night.mp3) | [srt](english/chatterbox/rain-night.srt) | 69s for 28s |
-| OmniVoice | ref, design | [script](english/omnivoice/rain-night.cast.txt) | [mp3](english/omnivoice/rain-night.mp3) | [srt](english/omnivoice/rain-night.srt) | 29s for 30s |
-| KittenTTS 2 | ref | [script](english/kitten/rain-night.cast.txt) | [mp3](english/kitten/rain-night.mp3) | [srt](english/kitten/rain-night.srt) | 15s for 34s |
-| Kokoro | preset | [script](english/kokoro/rain-night.cast.txt) | [mp3](english/kokoro/rain-night.mp3) | [srt](english/kokoro/rain-night.srt) | 14s for 27s |
-| Pocket TTS | preset | [script](english/pocket/rain-night.cast.txt) | [mp3](english/pocket/rain-night.mp3) | [srt](english/pocket/rain-night.srt) | 3s for 23s |
-| VoxCPM2 | ref, design | [script](english/voxcpm/rain-night.cast.txt) | [mp3](english/voxcpm/rain-night.mp3) | [srt](english/voxcpm/rain-night.srt) | 21s for 26s |
-| IndexTTS-2.5 | ref | [script](english/indextts/rain-night.cast.txt) | [mp3](english/indextts/rain-night.mp3) | [srt](english/indextts/rain-night.srt) | 90s for 34s |
-| Audio8-TTS | ref | [script](english/audio8/rain-night.cast.txt) | [mp3](english/audio8/rain-night.mp3) | [srt](english/audio8/rain-night.srt) | 35s for 32s |
-| dots.tts | ref | [script](english/dots/rain-night.cast.txt) | [mp3](english/dots/rain-night.mp3) | [srt](english/dots/rain-night.srt) | 136s for 1.9s, one line only |
-
-Breeze TTS 2 speaks only Chinese.
+| Engine | Voices | Rain night | Standoff | Bedtime |
+|---|---|---|---|---|
+| Breeze TTS 2 | ref, design | [mp3](english/breeze/rain-night.mp3) · [srt](english/breeze/rain-night.srt) · [script](english/breeze/rain-night.cast.txt)<br>21s for 30s | [mp3](english/breeze/standoff.mp3) · [srt](english/breeze/standoff.srt) · [script](english/breeze/standoff.cast.txt)<br>28s for 35s | [mp3](english/breeze/bedtime.mp3) · [srt](english/breeze/bedtime.srt) · [script](english/breeze/bedtime.cast.txt)<br>28s for 37s |
+| Qwen3-TTS | ref, design, preset | [mp3](english/qwen/rain-night.mp3) · [srt](english/qwen/rain-night.srt) · [script](english/qwen/rain-night.cast.txt)<br>123s for 27s | [mp3](english/qwen/standoff.mp3) · [srt](english/qwen/standoff.srt) · [script](english/qwen/standoff.cast.txt)<br>121s for 34s | [mp3](english/qwen/bedtime.mp3) · [srt](english/qwen/bedtime.srt) · [script](english/qwen/bedtime.cast.txt)<br>117s for 31s |
+| Chatterbox V3 | ref | [mp3](english/chatterbox/rain-night.mp3) · [srt](english/chatterbox/rain-night.srt) · [script](english/chatterbox/rain-night.cast.txt)<br>69s for 28s | [mp3](english/chatterbox/standoff.mp3) · [srt](english/chatterbox/standoff.srt) · [script](english/chatterbox/standoff.cast.txt)<br>64s for 36s | [mp3](english/chatterbox/bedtime.mp3) · [srt](english/chatterbox/bedtime.srt) · [script](english/chatterbox/bedtime.cast.txt)<br>65s for 36s |
+| OmniVoice | ref, design | [mp3](english/omnivoice/rain-night.mp3) · [srt](english/omnivoice/rain-night.srt) · [script](english/omnivoice/rain-night.cast.txt)<br>29s for 30s | [mp3](english/omnivoice/standoff.mp3) · [srt](english/omnivoice/standoff.srt) · [script](english/omnivoice/standoff.cast.txt)<br>28s for 37s | [mp3](english/omnivoice/bedtime.mp3) · [srt](english/omnivoice/bedtime.srt) · [script](english/omnivoice/bedtime.cast.txt)<br>29s for 35s |
+| KittenTTS 2 | ref | [mp3](english/kitten/rain-night.mp3) · [srt](english/kitten/rain-night.srt) · [script](english/kitten/rain-night.cast.txt)<br>15s for 34s | [mp3](english/kitten/standoff.mp3) · [srt](english/kitten/standoff.srt) · [script](english/kitten/standoff.cast.txt)<br>12s for 42s | [mp3](english/kitten/bedtime.mp3) · [srt](english/kitten/bedtime.srt) · [script](english/kitten/bedtime.cast.txt)<br>12s for 41s |
+| Kokoro | preset | [mp3](english/kokoro/rain-night.mp3) · [srt](english/kokoro/rain-night.srt) · [script](english/kokoro/rain-night.cast.txt)<br>14s for 27s | [mp3](english/kokoro/standoff.mp3) · [srt](english/kokoro/standoff.srt) · [script](english/kokoro/standoff.cast.txt)<br>10s for 32s | [mp3](english/kokoro/bedtime.mp3) · [srt](english/kokoro/bedtime.srt) · [script](english/kokoro/bedtime.cast.txt)<br>10s for 32s |
+| Pocket TTS | preset | [mp3](english/pocket/rain-night.mp3) · [srt](english/pocket/rain-night.srt) · [script](english/pocket/rain-night.cast.txt)<br>3s for 23s | [mp3](english/pocket/standoff.mp3) · [srt](english/pocket/standoff.srt) · [script](english/pocket/standoff.cast.txt)<br>13s for 36s | [mp3](english/pocket/bedtime.mp3) · [srt](english/pocket/bedtime.srt) · [script](english/pocket/bedtime.cast.txt)<br>12s for 27s |
+| VoxCPM2 | ref, design | [mp3](english/voxcpm/rain-night.mp3) · [srt](english/voxcpm/rain-night.srt) · [script](english/voxcpm/rain-night.cast.txt)<br>21s for 26s | [mp3](english/voxcpm/standoff.mp3) · [srt](english/voxcpm/standoff.srt) · [script](english/voxcpm/standoff.cast.txt)<br>25s for 36s | [mp3](english/voxcpm/bedtime.mp3) · [srt](english/voxcpm/bedtime.srt) · [script](english/voxcpm/bedtime.cast.txt)<br>25s for 32s |
+| IndexTTS-2.5 | ref | [mp3](english/indextts/rain-night.mp3) · [srt](english/indextts/rain-night.srt) · [script](english/indextts/rain-night.cast.txt)<br>90s for 34s | [mp3](english/indextts/standoff.mp3) · [srt](english/indextts/standoff.srt) · [script](english/indextts/standoff.cast.txt)<br>92s for 41s | [mp3](english/indextts/bedtime.mp3) · [srt](english/indextts/bedtime.srt) · [script](english/indextts/bedtime.cast.txt)<br>79s for 37s |
+| Audio8-TTS | ref | [mp3](english/audio8/rain-night.mp3) · [srt](english/audio8/rain-night.srt) · [script](english/audio8/rain-night.cast.txt)<br>35s for 32s | [mp3](english/audio8/standoff.mp3) · [srt](english/audio8/standoff.srt) · [script](english/audio8/standoff.cast.txt)<br>45s for 41s | [mp3](english/audio8/bedtime.mp3) · [srt](english/audio8/bedtime.srt) · [script](english/audio8/bedtime.cast.txt)<br>42s for 36s |
+| dots.tts | ref | [mp3](english/dots/rain-night.mp3) · [srt](english/dots/rain-night.srt) · [script](english/dots/rain-night.cast.txt)<br>30 min for 27s | [mp3](english/dots/standoff.mp3) · [srt](english/dots/standoff.srt) · [script](english/dots/standoff.cast.txt)<br>35 min for 33s | [mp3](english/dots/bedtime.mp3) · [srt](english/dots/bedtime.srt) · [script](english/dots/bedtime.cast.txt)<br>39 min for 33s |
 
 ## Notes
 
-- Engines that support it get the same emotions, such as `（低声，疲惫）` or `(low, tired)`. KittenTTS accepts only its own list of English emotions, so its scripts use `sad`, `surprised`, and `angry`. Engines without emotion control ignore them.
-- `[笑]` turns into each engine's own laugh tag, or is dropped. In the Chinese KittenTTS output, a transcription hears extra syllables right after the laugh.
-- dots.tts runs single-threaded on a Mac's CPU, so its examples are one line each.
+- Engines that support it get the same emotions, such as `（低声，疲惫）` or `(low, tired)`. KittenTTS accepts only its own list of English emotions, such as `sad`, `stern`, and `tender`, so its scripts use those. Engines without emotion control ignore them.
+- `[笑]`, `[咳嗽]`, and `[叹气]` turn into each engine's own tags, or are dropped. In the Chinese KittenTTS output, a transcription hears extra syllables around these tags.
+- Qwen3-TTS preset voices sometimes come out garbled when a line also carries an emotion, so its scripts give the preset to a role without emotions.
+- dots.tts runs single-threaded on a Mac's CPU, so each scene took 30 to 60 minutes.
+- The Chinese IndexTTS-2.5 standoff has no output. On the line "话音未落，一阵风吹灭了油灯。黑暗里，只听见刀剑出鞘的声音。" the model never stops generating, and memory grows past 40 GB until the process is killed. This happens with the line on its own as well. The English standoff renders normally.
 
 ## Reference voices
 

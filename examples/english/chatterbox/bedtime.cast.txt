@@ -1,0 +1,12 @@
+@voice Narrator = ref: ../../voices/english/narrator.wav
+@voice Grandma = ref: ../../voices/english/grandma.wav
+@voice Girl = ref: ../../voices/english/girl.wav
+
+Narrator: It was a summer night, and the yard was full of the sound of crickets.
+Girl (pleading): Grandma, one more story, please! Just one!
+Grandma (kind): All right, all right, just one. [咳嗽] Once upon a time, a little girl lived at the foot of a mountain.
+Girl (curious): Did she not want to go to sleep at night, just like me?
+Grandma (laughing): [笑] That's right, just like you.
+<pause 1>
+Narrator: Before the story was over, the little girl had fallen asleep in her grandma's arms.
+Grandma (softly): [叹气] This child is growing up so fast.
