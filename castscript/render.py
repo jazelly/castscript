@@ -33,6 +33,23 @@ def _srt_time(seconds: float) -> str:
     return f"{ms // 3600000:02}:{ms // 60000 % 60:02}:{ms // 1000 % 60:02},{ms % 1000:03}"
 
 
+def render_lines(script: Script, engine, out_dir: Path) -> None:
+    """Write each line to its own WAV, numbered in script order (0001.wav, ...), with no pauses."""
+    sr = engine.sample_rate
+    out_dir.mkdir(parents=True, exist_ok=True)
+    started = time.perf_counter()
+    for i, line in enumerate(script.lines, 1):
+        voice = script.voices[line.speaker]
+        text = convert_events(line.text, engine.events)
+        line_started = time.perf_counter()
+        pieces = [engine.synthesize(chunk, voice, line.emotion) for chunk in split_text(text)] if text else []
+        if pieces:
+            sf.write(out_dir / f"{i:04}.wav", np.concatenate(pieces), sr, subtype="PCM_16")
+        took = time.perf_counter() - line_started
+        print(f"[{i}/{len(script.lines)}] line {line.lineno} {line.speaker}: took {took:.1f}s", flush=True)
+    print(f"done: {len(script.lines)} lines in {time.perf_counter() - started:.1f}s -> {out_dir}")
+
+
 def render(script: Script, engine, out_base: Path) -> None:
     sr = engine.sample_rate
     pieces: list[np.ndarray] = []

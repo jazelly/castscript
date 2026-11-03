@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from .render import render
+from .render import render, render_lines
 from .script import parse
 
 
@@ -14,6 +14,7 @@ def main() -> None:
     parser.add_argument("script", type=Path, help="*.cast.txt file")
     parser.add_argument("--engine", choices=("breeze", "qwen", "chatterbox", "omnivoice", "kitten", "kokoro", "pocket", "voxcpm", "indextts", "audio8", "dots"), default="breeze")
     parser.add_argument("--out", type=Path, help="output path without extension (default: next to the script)")
+    parser.add_argument("--split", type=Path, metavar="DIR", help="write one WAV per line into DIR instead of one joined file")
     parser.add_argument("--language", default="zh", help="language code for multilingual engines (default: zh)")
     parser.add_argument("--breeze-dir", type=Path, help="breeze-tts-mlx checkout")
     parser.add_argument("--breeze-checkpoint", type=Path, help="Breeze MLX checkpoint directory")
@@ -70,6 +71,9 @@ def main() -> None:
             parser.error("--engine indextts needs --index-dir")
         engine = IndexTTSEngine(args.index_dir.resolve(), args.language)
 
+    if args.split:
+        render_lines(script, engine, args.split)
+        return
     out = args.out or args.script.with_name(args.script.name.removesuffix(".cast.txt"))
     render(script, engine, out)
 

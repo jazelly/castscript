@@ -74,6 +74,8 @@ path\to\engine-venv\Scripts\python -m castscript examples\chinese\chatterbox\rai
 
 This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script. `--out PATH` picks another location, without an extension.
 
+`--split DIR` instead writes each line to its own WAV in `DIR`, numbered in script order (`0001.wav`, `0002.wav`, ...) without pauses, for games and apps that play lines one at a time. A line left empty after dropping unsupported vocal events gets no file.
+
 `--language` (default `zh`) sets the language for the engines that need one: Qwen3-TTS, Chatterbox, OmniVoice, KittenTTS, Kokoro, Pocket TTS, IndexTTS, and dots.tts.
 
 ## Examples
