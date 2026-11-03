@@ -13,6 +13,9 @@ from ..script import Voice
 
 SEED = 42
 EMO_ALPHA = 0.6  # upstream recommends 0.6 or lower for text-derived emotion
+# Upstream's default beam search applies its repetition penalty to log-probabilities, which cannot break a
+# confident run of the silence token; some lines then never reach the stop token. Plain sampling penalizes logits.
+NUM_BEAMS = 1
 
 
 class IndexTTSEngine:
@@ -38,7 +41,7 @@ class IndexTTSEngine:
             raise ValueError(f"IndexTTS only clones ref voices; voice '{voice.name}' uses {voice.kind}")
         torch.manual_seed(SEED)
         emo = {"use_emo_text": True, "emo_text": emotion, "emo_alpha": EMO_ALPHA} if emotion else {}
-        sr, wav = self.model.infer(spk_audio_prompt=voice.value, text=text, output_path=None, lang=self.language, **emo)
+        sr, wav = self.model.infer(spk_audio_prompt=voice.value, text=text, output_path=None, lang=self.language, num_beams=NUM_BEAMS, **emo)
         if sr != self.sample_rate:
             raise ValueError(f"unexpected IndexTTS sample rate {sr}")
         return (np.asarray(wav, dtype=np.float32).reshape(-1) / 32768.0).astype(np.float32)
