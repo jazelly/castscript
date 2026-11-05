@@ -103,7 +103,7 @@ uv pip install -p ../index-tts/.venv castscript
 
 **OmniVoice** `design` voices take only its attribute vocabulary, such as `男，老年，低音调` or `female, low pitch, british accent`.
 
-**KittenTTS 2** emotions are a fixed list of English words; see [SPEC.md](SPEC.md).
+**KittenTTS 2** emotions are a fixed list of English words; see [SPEC.md](https://github.com/jazelly/castscript/blob/main/SPEC.md).
 
 **Kokoro** has preset voices only. Chinese presets start with `zf_` or `zm_`. English needs spaCy's `en_core_web_sm` model installed in the environment. Languages other than English and Chinese need [espeak-ng](https://github.com/espeak-ng/espeak-ng).
 
