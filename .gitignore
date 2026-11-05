@@ -4,3 +4,4 @@ examples/voices/*.wav
 examples/voices/*.txt
 examples/chinese/*/*.wav
 examples/english/*/*.wav
+dist/

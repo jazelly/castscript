@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "castscript"
+version = "0.1.0"
+description = "Plain-text multi-voice script format for audiobooks, rendered with local TTS engines"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "jazelly" }]
+requires-python = ">=3.10"
+dependencies = ["numpy", "soundfile"]
+keywords = ["tts", "audiobook", "radio-drama", "voice-cloning", "text-to-speech"]
+
+[project.urls]
+Homepage = "https://github.com/jazelly/castscript"
+
+[project.scripts]
+castscript = "castscript.__main__:main"
+
+[tool.hatch.build.targets.sdist]
+include = ["castscript", "README.md", "SPEC.md", "LICENSE"]

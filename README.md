@@ -15,11 +15,13 @@ A plain-text format for multi-voice audiobooks and radio plays, plus a renderer 
 林风（低声，疲惫）：掌柜的，还有空房吗？[叹气]
 ```
 
-The format is engine-independent. See [SPEC.md](SPEC.md) for the full format and what each engine supports.
+Hear what it sounds like: [the rainy-night scene rendered by VoxCPM2](https://github.com/jazelly/castscript/blob/main/examples/chinese/voxcpm/rain-night.mp3), or browse [every engine's renders](https://github.com/jazelly/castscript/tree/main/examples).
+
+The format is engine-independent. See [SPEC.md](https://github.com/jazelly/castscript/blob/main/SPEC.md) for the full format and what each engine supports.
 
 ## Engines
 
-castscript runs inside the engine's own Python environment, so engines with conflicting dependencies never share one. Give each engine its own virtual environment and install what the table lists.
+castscript runs inside the engine's own Python environment, so engines with conflicting dependencies never share one. Give each engine its own virtual environment and install `castscript` plus what the table lists, for example `pip install castscript qwen-tts`.
 
 | `--engine` | Engine | Install |
 |---|---|---|
@@ -35,7 +37,7 @@ castscript runs inside the engine's own Python environment, so engines with conf
 | `audio8` | Audio8-TTS Realistic 0.6B | `torch torchaudio "transformers>=4.57,<5" librosa` |
 | `dots` | dots.tts | `dots.tts` (see below) |
 
-Every engine also needs `soundfile`, and the renderer needs `ffmpeg` on `PATH` (`brew install ffmpeg`, or `winget install ffmpeg` on Windows). Models download from Hugging Face on first use.
+The renderer needs `ffmpeg` on `PATH` (`brew install ffmpeg`, or `winget install ffmpeg` on Windows). Models download from Hugging Face on first use.
 
 ### Platforms
 
@@ -58,18 +60,17 @@ macOS on Apple Silicon is the primary platform: every ✅ in its column rendered
 ## Usage
 
 1. Put reference voices next to your script. Each `voice.wav` needs a `voice.txt` that contains its exact transcript.
-2. From the castscript checkout, render with the engine environment's Python:
+2. Render with the `castscript` command from the engine's environment:
 
 ```bash
-PYTHONPATH=. path/to/engine-venv/bin/python -m castscript examples/chinese/chatterbox/rain-night.cast.txt --engine chatterbox
+castscript rain-night.cast.txt --engine chatterbox
 ```
 
-On Windows:
+On Windows, set `PYTHONUTF8=1` first:
 
 ```bat
-set PYTHONPATH=.
 set PYTHONUTF8=1
-path\to\engine-venv\Scripts\python -m castscript examples\chinese\chatterbox\rain-night.cast.txt --engine chatterbox
+castscript rain-night.cast.txt --engine chatterbox
 ```
 
 This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script. `--out PATH` picks another location, without an extension.
@@ -80,14 +81,14 @@ This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
 
 ## Examples
 
-[examples/](examples/) has three short scenes rendered by every engine in Chinese and in English: the input scripts, the MP3s, and the SRTs, so you can hear each engine before installing it.
+[examples/](https://github.com/jazelly/castscript/tree/main/examples) has three short scenes rendered by every engine in Chinese and in English: the input scripts, the MP3s, and the SRTs, so you can hear each engine before installing it.
 
 ## Engine notes
 
 **Breeze TTS 2:**
 
 ```bash
-PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/chinese/breeze/rain-night.cast.txt \
+uv run --project ../breeze-tts-mlx --with castscript castscript rain-night.cast.txt \
   --breeze-dir ../breeze-tts-mlx --breeze-checkpoint ../breeze-tts-mlx/chkpt-mlx-int8
 ```
 
@@ -96,7 +97,8 @@ PYTHONPATH=. uv run --project ../breeze-tts-mlx python -m castscript examples/ch
 **IndexTTS-2.5** needs `--index-dir` pointing at the checkout, and runs with that checkout's `.venv`:
 
 ```bash
-PYTHONPATH=. ../index-tts/.venv/bin/python -m castscript examples/chinese/indextts/rain-night.cast.txt --engine indextts --index-dir ../index-tts
+uv pip install -p ../index-tts/.venv castscript
+../index-tts/.venv/bin/castscript rain-night.cast.txt --engine indextts --index-dir ../index-tts
 ```
 
 **OmniVoice** `design` voices take only its attribute vocabulary, such as `男，老年，低音调` or `female, low pitch, british accent`.
