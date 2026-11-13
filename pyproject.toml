@@ -20,5 +20,9 @@ Homepage = "https://github.com/jazelly/castscript"
 [project.scripts]
 castscript = "castscript.__main__:main"
 
+[tool.hatch.build]
+# The web app is built by `pnpm build` in web/ and git-ignored; ship it anyway.
+artifacts = ["castscript/webui/**"]
+
 [tool.hatch.build.targets.sdist]
 include = ["castscript", "README.md", "SPEC.md", "LICENSE"]

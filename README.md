@@ -79,23 +79,34 @@ This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
 
 `--language` (default `zh`) sets the language for the engines that need one: Qwen3-TTS, Chatterbox, OmniVoice, KittenTTS, Kokoro, Pocket TTS, IndexTTS, and dots.tts.
 
-## Web GUI
+## Web app
 
-`castscript web` opens a browser GUI at `http://127.0.0.1:47810/` for writing scripts, adding reference voices, and rendering with any installed engine, then playing the result. Install `castscript` once as a global command (for example `uv tool install castscript`) and point it at a folder that holds one virtual environment per engine, named after the engine (`kokoro/`, `voxcpm/`, ...; IndexTTS as its `index-tts/` checkout):
+`castscript web` opens the castscript web app at `http://127.0.0.1:47810/`, in English or Chinese:
 
-```bash
-castscript web --envs ~/castscript-envs
+- **Studio**: the script list, an editor with castscript highlighting that marks the line of a parse error, and a render panel that lists only the engines able to voice the script, with progress, playback, subtitles, and logs.
+- **Voices**: the reference voice library, with playback, upload, and import.
+- **History**: every render, kept across restarts.
+- **Settings**: the engines folder, Breeze paths, and the default render language.
+
+Install `castscript` once as a global command (for example `uv tool install castscript`), run `castscript web`, and set **Settings → Engines folder** to a folder holding one virtual environment per engine, named after the engine (`kokoro/`, `voxcpm/`, ...; IndexTTS as its `index-tts/` checkout). Each render runs inside that engine's own environment, exactly as the CLI does.
+
+Everything lives in the workspace, `~/castscript` by default (`--workdir` picks another):
+
+```
+~/castscript/
+  scripts/NAME.cast.txt   scripts
+  voices/NAME.wav + .txt  reference voices
+  renders/ID/             one folder per render: MP3, SRT, WAV
+  castscript.db           SQLite: settings and render history
 ```
 
-Each render runs inside that engine's own environment, exactly as the CLI does. Scripts, voices, and renders live in `--workdir` (default `~/castscript`); a script renders to `NAME-ENGINE.mp3` and `.srt` next to it, so renders from different engines sit side by side. Breeze needs `--breeze-dir` (a checkout with its `.venv`) and `--breeze-checkpoint`. `--port` picks another port. The server listens on 127.0.0.1 only.
+**Import** takes a folder or file path and links every `.cast.txt` script and every WAV with a matching `.txt` transcript into the workspace as symlinks, so the files stay where they are and edits reach the originals. `--port` picks another port; the server listens on 127.0.0.1 only.
+
+The app's source is in [web/](https://github.com/jazelly/castscript/tree/main/web) (Vite, React, TypeScript, Tailwind, Radix, Lucide). `pnpm install && pnpm build` there writes it into `castscript/webui/`, which the Python package serves; build it before `uv build`. `pnpm dev` serves it on port 5174 against a running `castscript web`.
 
 ### macOS menu bar app
 
-`castscript app` builds `~/Applications/castscript.app` and opens it. It takes the same options as `castscript web`, which it runs in the background, and puts a castscript icon in the menu bar whose menu opens the GUI. It needs `swiftc` (`xcode-select --install`). The server log is at `~/Library/Logs/castscript-web.log`.
-
-```bash
-castscript app --envs ~/castscript-envs
-```
+`castscript app` builds `~/Applications/castscript.app` and opens it. It runs `castscript web` in the background and puts a castscript icon in the menu bar whose menu opens the web app. It needs `swiftc` (`xcode-select --install`). The server log is at `~/Library/Logs/castscript-web.log`.
 
 ## Examples
 

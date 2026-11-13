@@ -18,9 +18,6 @@ def main(argv: list[str]) -> None:
     parser = argparse.ArgumentParser(prog="castscript app", description="Build and open the castscript menu bar app (macOS).")
     parser.add_argument("--dest", type=Path, default=Path.home() / "Applications", help="where to put castscript.app (default: ~/Applications)")
     parser.add_argument("--workdir", type=Path, help="passed to castscript web")
-    parser.add_argument("--envs", type=Path, help="passed to castscript web")
-    parser.add_argument("--breeze-dir", type=Path, help="passed to castscript web")
-    parser.add_argument("--breeze-checkpoint", type=Path, help="passed to castscript web")
     parser.add_argument("--port", type=int, default=PORT, help=f"passed to castscript web (default: {PORT})")
     args = parser.parse_args(argv)
     if sys.platform != "darwin":
@@ -30,9 +27,8 @@ def main(argv: list[str]) -> None:
 
     # The app runs the server with this exact interpreter, so it keeps working outside a shell.
     command = [sys.executable, "-m", "castscript", "web", "--no-browser", "--port", str(args.port)]
-    for flag in ("workdir", "envs", "breeze_dir", "breeze_checkpoint"):
-        if value := getattr(args, flag):
-            command += ["--" + flag.replace("_", "-"), str(value.expanduser().resolve())]
+    if args.workdir:
+        command += ["--workdir", str(args.workdir.expanduser().resolve())]
 
     app = args.dest.expanduser() / "castscript.app"
     if app.exists():

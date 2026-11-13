@@ -5,3 +5,5 @@ examples/voices/*.txt
 examples/chinese/*/*.wav
 examples/english/*/*.wav
 dist/
+castscript/webui/
+web/node_modules/

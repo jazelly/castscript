@@ -1,0 +1,146 @@
+/*
+ * Design tokens and Tailwind utilities.
+ *
+ * Every colour, type size, radius and shadow the app uses is defined here, once. Write UI with the semantic
+ * utilities these generate (bg-surface, text-muted, border-line, text-sm, rounded-md …). Tailwind's default palette
+ * and type scale are switched off, and scripts/check-design.mjs fails the build on hex colours and arbitrary values
+ * outside this file. The palette follows the app icon: navy, cream paper, and an orange sound wave.
+ */
+@import 'tailwindcss';
+
+@theme {
+  --color-*: initial;
+  --text-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --font-*: initial;
+
+  --spacing: 4px;
+
+  --color-canvas: #f4f1ea; /* app background */
+  --color-surface: #fffdf8; /* panels, inputs, editor */
+  --color-surface-2: #efeadf; /* hover, quiet fills, code */
+  --color-line: #e0d9cb; /* borders */
+  --color-fg: #23243a; /* primary text */
+  --color-muted: #6f6c64; /* hints, metadata */
+  --color-primary: #34365b; /* selection, navigation, secondary emphasis */
+  --color-on-primary: #fffdf8;
+  --color-accent: #d9673a; /* the render action */
+  --color-on-accent: #ffffff;
+  --color-good: #2f7a4a; /* finished, valid */
+  --color-bad: #b3412b; /* errors, delete */
+  --color-warn: #a86a12; /* stopped, interrupted */
+  --color-highlight: #f6e2d6; /* editor error line */
+  --color-syntax-voice: #7a4fb5; /* @voice keyword */
+  --color-syntax-speaker: #34365b; /* speaker names */
+  --color-syntax-emotion: #a86a12; /* （emotion） */
+  --color-syntax-event: #d9673a; /* [笑] vocal events, pauses */
+  --color-scrim: rgb(20 20 34 / 0.45); /* dialog backdrop */
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 22px;
+
+  --radius-sm: 6px;
+  --radius-md: 9px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.06); /* cards, panels */
+  --shadow-pop: 0 10px 30px rgb(20 20 40 / 0.18); /* dialogs, menus, toasts */
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, 'PingFang SC', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-canvas: #15162a;
+    --color-surface: #1d1e34;
+    --color-surface-2: #282944;
+    --color-line: #33354f;
+    --color-fg: #ece8de;
+    --color-muted: #9b99a8;
+    --color-primary: #c9c6ef;
+    --color-on-primary: #1a1b2e;
+    --color-accent: #ef8a5f;
+    --color-on-accent: #1a1b2e;
+    --color-good: #7cc495;
+    --color-bad: #f08a74;
+    --color-warn: #e3b25f;
+    --color-highlight: #4a2f2a;
+    --color-syntax-voice: #c4a4f2;
+    --color-syntax-speaker: #c9c6ef;
+    --color-syntax-emotion: #e3b25f;
+    --color-syntax-event: #ef8a5f;
+    --color-scrim: rgb(0 0 0 / 0.6);
+  }
+}
+
+@layer base {
+  html {
+    font-size: 14px;
+    color-scheme: light dark;
+  }
+  body {
+    @apply bg-canvas text-fg font-sans text-base;
+  }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* CodeMirror picks colours from the tokens above. */
+.cm-editor {
+  height: 100%;
+  background: var(--color-surface);
+  color: var(--color-fg);
+  font-size: var(--text-base);
+}
+.cm-editor.cm-focused {
+  outline: none;
+}
+.cm-scroller {
+  font-family: var(--font-mono);
+  line-height: 1.75;
+}
+.cm-gutters {
+  background: var(--color-surface);
+  color: var(--color-muted);
+  border-right: 1px solid var(--color-line);
+}
+.cm-activeLine,
+.cm-activeLineGutter {
+  background: var(--color-surface-2);
+}
+.cm-cursor {
+  border-left-color: var(--color-fg);
+}
+.cm-selectionBackground,
+.cm-focused .cm-selectionBackground {
+  background: var(--color-highlight) !important;
+}
+.cm-error-line {
+  background: var(--color-highlight);
+}
+.tok-voice {
+  color: var(--color-syntax-voice);
+  font-weight: 600;
+}
+.tok-speaker {
+  color: var(--color-syntax-speaker);
+  font-weight: 600;
+}
+.tok-emotion {
+  color: var(--color-syntax-emotion);
+}
+.tok-event {
+  color: var(--color-syntax-event);
+}
+.tok-comment {
+  color: var(--color-muted);
+  font-style: italic;
+}
