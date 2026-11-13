@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>castscript</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect x='100' y='100' width='824' height='824' rx='225' fill='%2334365B'/%3E%3Cpath d='M332 278h360a76 76 0 0 1 76 76v280a76 76 0 0 1-76 76H444l-132 72v-75a76 76 0 0 1-56-73V354a76 76 0 0 1 76-76Z' fill='%23FFF4DF'/%3E%3Cpath d='M548 466v108M656 394v252' stroke='%23E88256' stroke-width='48' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f6f3ec; --panel: #fffdf8; --line: #e4ded1; --text: #23243a; --muted: #77756d;
+    --navy: #34365b; --accent: #e88256; --accent-text: #fff; --ok: #3b7d4f; --err: #b3412b;
+    --editor: #fffdf8; --code: #f0ebdf;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17182a; --panel: #1f2036; --line: #33344f; --text: #ece8de; --muted: #9a98a8;
+      --navy: #c9c6ef; --accent: #ef9068; --accent-text: #1a1a2a; --ok: #7cc495; --err: #f08a74;
+      --editor: #1b1c30; --code: #2a2b45;
+    }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+    display: grid; grid-template-rows: auto 1fr; }
+  button, select, input, textarea { font: inherit; color: inherit; }
+  header { display: flex; align-items: center; gap: 10px; padding: 10px 18px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  header svg { width: 26px; height: 26px; }
+  header h1 { font-size: 16px; margin: 0; letter-spacing: .2px; }
+  header .ws { margin-left: auto; color: var(--muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .app { display: grid; grid-template-columns: 270px 1fr; min-height: 0; }
+  aside { border-right: 1px solid var(--line); background: var(--panel); overflow: auto; padding: 14px 12px; display: flex; flex-direction: column; gap: 18px; }
+  aside h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); margin: 0 0 6px; display: flex; align-items: center; }
+  aside h2 button { margin-left: auto; }
+  .list { display: flex; flex-direction: column; gap: 1px; }
+  .item { text-align: left; background: none; border: 0; padding: 6px 8px; border-radius: 6px; cursor: pointer; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item:hover { background: var(--code); }
+  .item.active { background: var(--navy); color: var(--panel); }
+  .item small { color: var(--muted); display: block; font-size: 11px; overflow: hidden; text-overflow: ellipsis; }
+  .item.active small { color: inherit; opacity: .75; }
+  .empty { color: var(--muted); font-size: 12px; padding: 4px 8px; }
+  .btn { border: 1px solid var(--line); background: var(--panel); padding: 5px 11px; border-radius: 7px; cursor: pointer; white-space: nowrap; }
+  .btn:hover { border-color: var(--muted); }
+  .btn.small { padding: 2px 8px; font-size: 12px; }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  form.voice { display: grid; gap: 6px; }
+  form.voice input, form.voice textarea { width: 100%; border: 1px solid var(--line); border-radius: 6px; background: var(--editor); padding: 5px 7px; font-size: 12px; }
+  details.help { font-size: 12px; color: var(--muted); }
+  details.help summary { cursor: pointer; }
+  details.help code { background: var(--code); padding: 0 4px; border-radius: 4px; color: var(--text); }
+  details.help p { margin: 6px 0; }
+  main { display: grid; grid-template-rows: auto 1fr auto; min-height: 0; min-width: 0; }
+  .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+  .toolbar .name { font-weight: 600; }
+  .toolbar .dirty::after { content: " ●"; color: var(--accent); }
+  .status { font-size: 12px; color: var(--muted); }
+  .status.ok { color: var(--ok); }
+  .status.err { color: var(--err); }
+  .toolbar .right { margin-left: auto; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  select { border: 1px solid var(--line); background: var(--panel); border-radius: 7px; padding: 4px 6px; }
+  .kinds { font-size: 12px; color: var(--muted); }
+  textarea.editor { width: 100%; height: 100%; resize: none; border: 0; outline: 0; padding: 16px 20px; background: var(--editor);
+    font: 14px/1.7 ui-monospace, "SF Mono", Menlo, "PingFang SC", monospace; tab-size: 2; }
+  .placeholder { display: grid; place-items: center; color: var(--muted); padding: 40px; text-align: center; }
+  .bottom { border-top: 1px solid var(--line); background: var(--panel); padding: 10px 16px; display: grid; gap: 10px; max-height: 45vh; overflow: auto; }
+  .progress { display: flex; align-items: center; gap: 10px; font-size: 12px; }
+  .bar { flex: 1; height: 6px; background: var(--code); border-radius: 3px; overflow: hidden; }
+  .bar > div { height: 100%; width: 0; background: var(--accent); transition: width .3s; }
+  pre.log { margin: 6px 0 0; font: 11.5px/1.5 ui-monospace, Menlo, monospace; background: var(--code); padding: 8px 10px; border-radius: 6px;
+    max-height: 180px; overflow: auto; white-space: pre-wrap; word-break: break-all; }
+  .outputs { display: grid; gap: 6px; }
+  .out { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .out .eng { font-weight: 600; min-width: 80px; }
+  .out audio { height: 32px; flex: 1; min-width: 220px; }
+  .out a { color: var(--navy); font-size: 12px; }
+  @media (max-width: 760px) {
+    .app { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+    aside { border-right: 0; border-bottom: 1px solid var(--line); max-height: 38vh; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <svg viewBox="0 0 1024 1024" aria-hidden="true"><rect x="100" y="100" width="824" height="824" rx="225" fill="#34365B"/><path d="M332 278h360a76 76 0 0 1 76 76v280a76 76 0 0 1-76 76H444l-132 72v-75a76 76 0 0 1-56-73V354a76 76 0 0 1 76-76Z" fill="#FFF4DF"/><path d="M364 430h72M364 538h72" stroke="#34365B" stroke-width="48" stroke-linecap="round"/><path d="M548 466v108M656 394v252" stroke="#E88256" stroke-width="48" stroke-linecap="round"/></svg>
+  <h1>castscript</h1>
+  <span class="ws" id="ws"></span>
+</header>
+<div class="app">
+  <aside>
+    <section>
+      <h2>Scripts <button class="btn small" id="new">+ New</button></h2>
+      <div class="list" id="scripts"></div>
+    </section>
+    <section>
+      <h2>Voices</h2>
+      <div class="list" id="voices"></div>
+    </section>
+    <section>
+      <h2>Add a reference voice</h2>
+      <form class="voice" id="voiceForm">
+        <input name="name" placeholder="Name, e.g. narrator" required>
+        <input name="audio" type="file" accept=".wav,audio/wav" required>
+        <textarea name="transcript" rows="2" placeholder="Exact words spoken in the WAV" required></textarea>
+        <button class="btn">Add voice</button>
+      </form>
+    </section>
+    <details class="help">
+      <summary>Script syntax</summary>
+      <p><code>@voice NAME = ref: voices/a.wav</code> clone a voice; <code>design: description</code> or <code>preset: speaker</code> also work.</p>
+      <p><code>NAME：line</code> or <code>NAME（emotion）：line</code></p>
+      <p>Vocal events: <code>[笑]</code> <code>[叹气]</code> <code>[咳嗽]</code> <code>[清嗓子]</code></p>
+      <p>Pauses: blank line 0.8 s, <code>---</code> 2 s, <code>&lt;pause 1.5&gt;</code> exact. <code>#</code> starts a comment.</p>
+    </details>
+  </aside>
+  <main>
+    <div class="toolbar" id="toolbar" hidden>
+      <span class="name" id="name"></span>
+      <span class="status" id="status"></span>
+      <div class="right">
+        <button class="btn" id="save">Save</button>
+        <select id="engine" aria-label="Engine"></select>
+        <span class="kinds" id="kinds"></span>
+        <select id="language" aria-label="Language">
+          <option value="zh">Chinese</option><option value="en">English</option><option value="ja">Japanese</option>
+          <option value="ko">Korean</option><option value="fr">French</option><option value="de">German</option>
+          <option value="es">Spanish</option><option value="it">Italian</option><option value="pt">Portuguese</option>
+          <option value="ru">Russian</option><option value="nl">Dutch</option>
+        </select>
+        <button class="btn primary" id="render">Render</button>
+        <button class="btn" id="stop" hidden>Stop</button>
+      </div>
+    </div>
+    <div class="placeholder" id="placeholder">Open a script on the left, or create one with <b>+ New</b>.</div>
+    <textarea class="editor" id="editor" spellcheck="false" hidden></textarea>
+    <div class="bottom" id="bottom" hidden>
+      <div id="jobBox" hidden>
+        <div class="progress"><span id="jobLabel"></span><div class="bar"><div id="barFill"></div></div><span id="jobCount"></span></div>
+        <details id="logBox"><summary class="status">Log</summary><pre class="log" id="log"></pre></details>
+      </div>
+      <div class="outputs" id="outputs"></div>
+    </div>
+  </main>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+const api = async (path, body) => {
+  const res = await fetch(path, body === undefined ? {} : {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error);
+  return data;
+};
+const esc = s => s.replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const pref = (k, v) => { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch { return null; } };
+
+let current = null, saved = "", polling = null;
+
+function relPath(from, to) {
+  const a = from.split("/").slice(0, -1), b = to.split("/");
+  while (a.length && b.length > 1 && a[0] === b[0]) { a.shift(); b.shift(); }
+  return [...a.map(() => ".."), ...b].join("/");
+}
+
+function setStatus(text, cls = "") { $("status").textContent = text; $("status").className = "status " + cls; }
+function markDirty() { $("name").classList.toggle("dirty", $("editor").value !== saved); }
+
+async function refresh() {
+  const s = await api("/api/state");
+  $("ws").textContent = s.workdir;
+  $("scripts").innerHTML = s.scripts.map(p => `<button class="item${p === current ? " active" : ""}" data-path="${esc(p)}">${esc(p)}</button>`).join("")
+    || `<div class="empty">No scripts yet.</div>`;
+  $("voices").innerHTML = s.voices.map(v => `<button class="item" data-voice="${esc(v.path)}" title="Insert into the script">${esc(v.path.split("/").pop().replace(/\.wav$/, ""))}<small>${esc(v.transcript)}</small></button>`).join("")
+    || `<div class="empty">Add a WAV and its transcript below.</div>`;
+  const chosen = $("engine").value || pref("engine");
+  $("engine").innerHTML = s.engines.map(e => `<option value="${e.name}" data-voices="${e.voices}" ${e.installed ? "" : "disabled"}>${e.name}${e.installed ? "" : " (not installed)"}</option>`).join("");
+  const installed = s.engines.filter(e => e.installed).map(e => e.name);
+  $("engine").value = installed.includes(chosen) ? chosen : (installed[0] || "");
+  showKinds();
+  showJob(s.job);
+}
+
+function showKinds() {
+  const opt = $("engine").selectedOptions[0];
+  $("kinds").textContent = opt ? "voices: " + opt.dataset.voices : "no engine installed";
+  $("render").disabled = !opt || $("stop").hidden === false;
+}
+
+async function openScript(path) {
+  if (current && $("editor").value !== saved && !confirm("Discard unsaved changes?")) return;
+  const data = await api("/api/script?path=" + encodeURIComponent(path));
+  current = path; saved = data.text;
+  pref("script", path);
+  $("editor").value = data.text;
+  $("name").textContent = path;
+  for (const id of ["toolbar", "editor", "bottom"]) $(id).hidden = false;
+  $("placeholder").hidden = true;
+  setStatus("");
+  markDirty();
+  showOutputs(data.outputs);
+  document.querySelectorAll("#scripts .item").forEach(b => b.classList.toggle("active", b.dataset.path === path));
+}
+
+async function save() {
+  const text = $("editor").value;
+  const r = await api("/api/script", {path: current, text});
+  saved = text; markDirty();
+  if (r.ok) setStatus(`${r.voices} voices · ${r.lines} lines`, "ok");
+  else setStatus(r.error, "err");
+  return r.ok;
+}
+
+function showOutputs(list) {
+  $("outputs").innerHTML = list.map(o => `<div class="out"><span class="eng">${esc(o.engine)}</span>
+    <audio controls preload="none" src="/files/${encodeURI(o.mp3)}?t=${Date.now()}"></audio>
+    <a href="/files/${encodeURI(o.mp3)}" download>mp3</a>${o.srt ? ` <a href="/files/${encodeURI(o.srt)}" target="_blank">srt</a>` : ""}</div>`).join("")
+    || `<div class="empty">No renders yet. Pick an engine and press Render.</div>`;
+}
+
+function showJob(job) {
+  const running = job.state === "running";
+  $("stop").hidden = !running;
+  $("render").disabled = running || !$("engine").value;
+  if (job.state === "idle") { $("jobBox").hidden = true; return; }
+  $("jobBox").hidden = false;
+  const label = {running: "Rendering", done: "Done", failed: "Failed", stopped: "Stopped"}[job.state];
+  $("jobLabel").textContent = `${label}: ${job.script} with ${job.engine}`;
+  $("jobLabel").className = job.state === "failed" ? "status err" : job.state === "done" ? "status ok" : "status";
+  const pct = job.total ? job.done / job.total * 100 : 0;
+  $("barFill").style.width = (job.state === "done" ? 100 : pct) + "%";
+  $("jobCount").textContent = job.total ? `${job.done}/${job.total} lines` : (running ? "loading model…" : "");
+  const log = $("log"), atEnd = log.scrollTop + log.clientHeight >= log.scrollHeight - 4;
+  log.textContent = job.log.join("\n");
+  if (atEnd) log.scrollTop = log.scrollHeight;
+  if (job.state === "failed") $("logBox").open = true;
+  if (running && !polling) polling = setInterval(poll, 1000);
+  if (!running && polling) { clearInterval(polling); polling = null; if (current) api("/api/script?path=" + encodeURIComponent(current)).then(d => showOutputs(d.outputs)); }
+}
+
+async function poll() { showJob(await api("/api/job")); }
+
+$("scripts").onclick = e => { const b = e.target.closest("[data-path]"); if (b) openScript(b.dataset.path).catch(err => alert(err.message)); };
+$("voices").onclick = e => {
+  const b = e.target.closest("[data-voice]");
+  if (!b || !current) return;
+  const name = b.dataset.voice.split("/").pop().replace(/\.wav$/, "");
+  const line = `@voice ${name} = ref: ${relPath(current, b.dataset.voice)}\n`;
+  const ed = $("editor"), at = ed.value.lastIndexOf("\n", ed.selectionStart - 1) + 1;
+  ed.setRangeText(line, at, at, "end"); ed.focus(); markDirty();
+};
+$("new").onclick = async () => {
+  let name = prompt("Script name", "my-scene");
+  if (!name) return;
+  name = name.trim().replace(/\.cast\.txt$/, "") + ".cast.txt";
+  const text = "@voice Narrator = design: A warm, calm middle-aged narrator.\n\nNarrator: It was raining hard that night.\n";
+  try { await api("/api/script", {path: name, text}); await refresh(); await openScript(name); } catch (err) { alert(err.message); }
+};
+$("editor").oninput = markDirty;
+$("save").onclick = () => save().catch(err => setStatus(err.message, "err"));
+document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key === "s" && current) { e.preventDefault(); $("save").click(); } });
+$("engine").onchange = () => { pref("engine", $("engine").value); showKinds(); };
+$("language").onchange = () => pref("language", $("language").value);
+$("render").onclick = async () => {
+  try {
+    if (!await save()) return;
+    showJob(await api("/api/render", {path: current, engine: $("engine").value, language: $("language").value}));
+  } catch (err) { setStatus(err.message, "err"); }
+};
+$("stop").onclick = async () => showJob(await api("/api/stop", {}));
+$("voiceForm").onsubmit = async e => {
+  e.preventDefault();
+  const f = e.target, file = f.audio.files[0];
+  const audio = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(",")[1]); fr.readAsDataURL(file); });
+  try { await api("/api/voice", {name: f.name.value, transcript: f.transcript.value, audio}); f.reset(); refresh(); } catch (err) { alert(err.message); }
+};
+
+$("language").value = pref("language") || "zh";
+refresh().then(() => { const last = pref("script"); if (last && document.querySelector(`[data-path="${CSS.escape(last)}"]`)) openScript(last); });
+</script>
+</body>
+</html>

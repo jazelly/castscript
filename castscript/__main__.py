@@ -1,8 +1,9 @@
-"""castscript CLI: python -m castscript SCRIPT --engine breeze ..."""
+"""castscript CLI: castscript SCRIPT --engine breeze ..., castscript web, castscript app"""
 
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 from .render import render, render_lines
@@ -10,7 +11,15 @@ from .script import parse
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(prog="castscript")
+    if sys.argv[1:2] == ["web"]:
+        from .web import main as web
+
+        return web(sys.argv[2:])
+    if sys.argv[1:2] == ["app"]:
+        from .app import main as app
+
+        return app(sys.argv[2:])
+    parser = argparse.ArgumentParser(prog="castscript", epilog="also: `castscript web` opens the browser GUI, `castscript app` builds the macOS menu bar app")
     parser.add_argument("script", type=Path, help="*.cast.txt file")
     parser.add_argument("--engine", choices=("breeze", "qwen", "chatterbox", "omnivoice", "kitten", "kokoro", "pocket", "voxcpm", "indextts", "audio8", "dots"), default="breeze")
     parser.add_argument("--out", type=Path, help="output path without extension (default: next to the script)")

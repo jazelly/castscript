@@ -79,6 +79,24 @@ This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
 
 `--language` (default `zh`) sets the language for the engines that need one: Qwen3-TTS, Chatterbox, OmniVoice, KittenTTS, Kokoro, Pocket TTS, IndexTTS, and dots.tts.
 
+## Web GUI
+
+`castscript web` opens a browser GUI at `http://127.0.0.1:47810/` for writing scripts, adding reference voices, and rendering with any installed engine, then playing the result. Install `castscript` once as a global command (for example `uv tool install castscript`) and point it at a folder that holds one virtual environment per engine, named after the engine (`kokoro/`, `voxcpm/`, ...; IndexTTS as its `index-tts/` checkout):
+
+```bash
+castscript web --envs ~/castscript-envs
+```
+
+Each render runs inside that engine's own environment, exactly as the CLI does. Scripts, voices, and renders live in `--workdir` (default `~/castscript`); a script renders to `NAME-ENGINE.mp3` and `.srt` next to it, so renders from different engines sit side by side. Breeze needs `--breeze-dir` (a checkout with its `.venv`) and `--breeze-checkpoint`. `--port` picks another port. The server listens on 127.0.0.1 only.
+
+### macOS menu bar app
+
+`castscript app` builds `~/Applications/castscript.app` and opens it. It takes the same options as `castscript web`, which it runs in the background, and puts a castscript icon in the menu bar whose menu opens the GUI. It needs `swiftc` (`xcode-select --install`). The server log is at `~/Library/Logs/castscript-web.log`.
+
+```bash
+castscript app --envs ~/castscript-envs
+```
+
 ## Examples
 
 [examples/](https://github.com/jazelly/castscript/tree/main/examples) has three short scenes rendered by every engine in Chinese and in English: the input scripts, the MP3s, and the SRTs, so you can hear each engine before installing it.
