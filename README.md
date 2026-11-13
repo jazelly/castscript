@@ -6,6 +6,7 @@ A plain-text format for multi-voice audiobooks and radio plays, plus a renderer 
 - **Per-character voices.** Clone from a reference WAV, design from a text description, or pick an engine preset.
 - **Emotion, vocal events, pauses.** `（低声，疲惫）`, `[叹气]`, and blank-line / `---` / `<pause N>` timing.
 - **Engine-independent, fully local.** The same script renders on any of eleven local TTS engines; outputs MP3 and SRT subtitles.
+- **Web app and menu bar app.** Edit, render, and play scripts in a local web app in English or Chinese, opened from the command line or a macOS menu bar icon.
 
 ```
 @voice 旁白 = ref: voices/narrator.wav
@@ -16,6 +17,10 @@ A plain-text format for multi-voice audiobooks and radio plays, plus a renderer 
 ```
 
 Hear what it sounds like: [the rainy-night scene rendered by VoxCPM2](https://github.com/jazelly/castscript/blob/main/examples/chinese/voxcpm/rain-night.mp3), or browse [every engine's renders](https://github.com/jazelly/castscript/tree/main/examples).
+
+Write, render, and listen in the [web app](#web-app) or from the command line:
+
+![The castscript web app: a script in the editor, with its render ready to play](https://raw.githubusercontent.com/jazelly/castscript/main/docs/screenshots/studio.png)
 
 The format is engine-independent. See [SPEC.md](https://github.com/jazelly/castscript/blob/main/SPEC.md) for the full format and what each engine supports.
 
@@ -87,6 +92,10 @@ This writes `.wav`, `.mp3` (loudness-normalized), and `.srt` next to the script.
 - **Voices**: the reference voice library, with playback, upload, and import.
 - **History**: every render, kept across restarts.
 - **Settings**: the engines folder, Breeze paths, and the default render language.
+
+![The Studio in Chinese, with a sci-fi scene rendered by KittenTTS](https://raw.githubusercontent.com/jazelly/castscript/main/docs/screenshots/studio-zh.png)
+
+![History: every render with its engine, length, and render time](https://raw.githubusercontent.com/jazelly/castscript/main/docs/screenshots/history.png)
 
 Install `castscript` once as a global command (for example `uv tool install castscript`), run `castscript web`, and set **Settings → Engines folder** to a folder holding one virtual environment per engine, named after the engine (`kokoro/`, `voxcpm/`, ...; IndexTTS as its `index-tts/` checkout). Each render runs inside that engine's own environment, exactly as the CLI does.
 
