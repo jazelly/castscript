@@ -12,7 +12,11 @@ SCENE_PAUSE = 2.0
 EVENTS = ("笑", "叹气", "咳嗽", "清嗓子")
 
 VOICE_RE = re.compile(r"^@voice\s+(?P<name>[^=]+?)\s*=\s*(?P<kind>ref|design|preset)\s*[:：]\s*(?P<value>.+)$")
-PAUSE_RE = re.compile(r"^<(?:pause|停顿)\s+(?P<seconds>\d+(?:\.\d+)?)\s*(?:s|秒)?>$")
+PAUSE = r"<(?:pause|停顿)\s+(?P<seconds>\d+(?:\.\d+)?)\s*(?:s|秒)?>"
+PAUSE_RE = re.compile(f"^{PAUSE}$")
+INLINE_PAUSE_RE = re.compile(PAUSE.replace("?P<seconds>", ""))
+AT_RE = re.compile(r"^<(?:at|时间)\s+(?P<time>[^>]*?)\s*>$")
+TIME_RE = re.compile(r"^(?:(?:(?P<h>\d+):)?(?P<m>\d+):)?(?P<s>\d+(?:\.\d+)?)$")
 LINE_RE = re.compile(
     r"^(?P<speaker>[^：:（()）]+?)\s*(?:[（(](?P<emotion>[^）)]*)[）)])?\s*[：:]\s*(?P<text>.+)$"
 )
@@ -38,6 +42,13 @@ class Line:
     emotion: str | None
     text: str
     pause_after: float = 0.0
+    start_at: float | None = None  # absolute start time from <at T>
+
+    @property
+    def segments(self) -> list[tuple[str, float]]:
+        """Split TEXT at inline <pause N>: each piece of text with the silence after it."""
+        parts = INLINE_PAUSE_RE.split(self.text)
+        return [(parts[i].strip(), float(parts[i + 1]) if i + 1 < len(parts) else 0.0) for i in range(0, len(parts), 2)]
 
 
 @dataclass
@@ -59,6 +70,8 @@ def parse(path: Path) -> Script:
     voices: dict[str, Voice] = {}
     lines: list[Line] = []
     explicit_pause = False
+    anchor: tuple[int, float] | None = None
+    last_anchor = -1.0
 
     for lineno, raw in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
         s = raw.strip()
@@ -78,6 +91,16 @@ def parse(path: Path) -> Script:
             lines[-1].pause_after = float(m["seconds"])
             explicit_pause = True
             continue
+        if m := AT_RE.match(s):
+            if anchor:
+                raise ScriptError(f"{path}:{lineno}: two time anchors with no line between them")
+            t = _seconds(m["time"])
+            if t is None:
+                raise ScriptError(f"{path}:{lineno}: invalid time, use seconds, M:SS.s, or H:MM:SS.s: {m['time']}")
+            if t <= last_anchor:
+                raise ScriptError(f"{path}:{lineno}: time anchor {m['time']} is not after the previous one")
+            anchor, last_anchor = (lineno, t), t
+            continue
         if m := VOICE_RE.match(s):
             voices[m["name"]] = _voice(path, lineno, m["name"], m["kind"], m["value"].strip(), voices)
             continue
@@ -88,14 +111,23 @@ def parse(path: Path) -> Script:
             if speaker not in voices:
                 raise ScriptError(f"{path}:{lineno}: voice '{speaker}' is not defined")
             emotion = (m["emotion"] or "").strip() or None
-            lines.append(Line(lineno, speaker, emotion, m["text"].strip(), LINE_PAUSE))
+            lines.append(Line(lineno, speaker, emotion, m["text"].strip(), LINE_PAUSE, anchor and anchor[1]))
             explicit_pause = False
+            anchor = None
             continue
         raise ScriptError(f"{path}:{lineno}: cannot parse line: {s}")
 
+    if anchor:
+        raise ScriptError(f"{path}:{anchor[0]}: time anchor with no line after it")
     if lines:
         lines[-1].pause_after = 0.0
     return Script(voices, lines)
+
+
+def _seconds(text: str) -> float | None:
+    if not (m := TIME_RE.match(text)):
+        return None
+    return int(m["h"] or 0) * 3600 + int(m["m"] or 0) * 60 + float(m["s"])
 
 
 def _voice(path: Path, lineno: int, name: str, kind: str, value: str, voices: dict) -> Voice:

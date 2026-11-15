@@ -10,7 +10,7 @@ from pathlib import Path
 import numpy as np
 import soundfile as sf
 
-from .script import Script, convert_events, strip_events
+from .script import Script, ScriptError, convert_events, strip_events
 
 MAX_CHARS = 150
 SENTENCE_RE = re.compile(r"(?<=[。！？!?…])")
@@ -34,16 +34,21 @@ def _srt_time(seconds: float) -> str:
 
 
 def render_lines(script: Script, engine, out_dir: Path) -> None:
-    """Write each line to its own WAV, numbered in script order (0001.wav, ...), with no pauses."""
+    """Write each line to its own WAV, numbered in script order (0001.wav, ...), without the pauses between lines."""
     sr = engine.sample_rate
     out_dir.mkdir(parents=True, exist_ok=True)
     started = time.perf_counter()
     for i, line in enumerate(script.lines, 1):
         voice = script.voices[line.speaker]
-        text = convert_events(line.text, engine.events)
         line_started = time.perf_counter()
-        pieces = [engine.synthesize(chunk, voice, line.emotion) for chunk in split_text(text)] if text else []
-        if pieces:
+        pieces, spoken = [], False
+        for segment, pause in line.segments:
+            text = convert_events(segment, engine.events)
+            for chunk in split_text(text) if text else []:
+                pieces.append(engine.synthesize(chunk, voice, line.emotion))
+                spoken = True
+            pieces.append(np.zeros(round(pause * sr), dtype=np.float32))
+        if spoken:
             sf.write(out_dir / f"{i:04}.wav", np.concatenate(pieces), sr, subtype="PCM_16")
         took = time.perf_counter() - line_started
         print(f"[{i}/{len(script.lines)}] line {line.lineno} {line.speaker}: took {took:.1f}s", flush=True)
@@ -54,23 +59,38 @@ def render(script: Script, engine, out_base: Path) -> None:
     sr = engine.sample_rate
     pieces: list[np.ndarray] = []
     cues: list[tuple[float, float, str]] = []
-    cursor = 0.0
+    cursor = 0.0  # end of everything placed so far
+    gap = 0.0  # silence owed before the next line
     started = time.perf_counter()
+
+    def silence(seconds: float) -> None:
+        nonlocal cursor
+        pieces.append(np.zeros(round(seconds * sr), dtype=np.float32))
+        cursor += seconds
 
     for i, line in enumerate(script.lines, 1):
         voice = script.voices[line.speaker]
-        text = convert_events(line.text, engine.events)
+        # <at T> replaces the pause before the line: pad from the end of the previous audio up to T.
+        if line.start_at is not None:
+            if cursor > line.start_at:
+                raise ScriptError(
+                    f"line {line.lineno}: <at {line.start_at:g}> is too early, the previous line ends at {cursor:.2f}s"
+                )
+            gap = line.start_at - cursor
+        silence(gap)
         line_started = time.perf_counter()
-        # A line of only unsupported vocal events is empty; it keeps just its pause.
-        for chunk in split_text(text) if text else []:
-            audio = engine.synthesize(chunk, voice, line.emotion)
-            duration = audio.size / sr
-            if subtitle := strip_events(chunk):
-                cues.append((cursor, cursor + duration, subtitle))
-            pieces.append(audio)
-            cursor += duration
-        pieces.append(np.zeros(round(line.pause_after * sr), dtype=np.float32))
-        cursor += line.pause_after
+        for segment, pause in line.segments:
+            text = convert_events(segment, engine.events)
+            # A segment of only unsupported vocal events is empty; it keeps just its pause.
+            for chunk in split_text(text) if text else []:
+                audio = engine.synthesize(chunk, voice, line.emotion)
+                duration = audio.size / sr
+                if subtitle := strip_events(chunk):
+                    cues.append((cursor, cursor + duration, subtitle))
+                pieces.append(audio)
+                cursor += duration
+            silence(pause)
+        gap = line.pause_after
         took = time.perf_counter() - line_started
         print(f"[{i}/{len(script.lines)}] line {line.lineno} {line.speaker}: at {cursor:.1f}s, took {took:.1f}s", flush=True)
 

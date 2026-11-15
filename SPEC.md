@@ -17,7 +17,8 @@ A castscript is a UTF-8 plain-text file (`*.cast.txt`) that says **who reads eac
 掌柜（惊讶转为热情）：有，有，客官里边请！[笑]
 
 ---
-旁白：第二天清晨……
+<at 1:05>
+旁白：第二天清晨……<pause 0.6>雨停了。
 ```
 
 ## Rules
@@ -47,6 +48,11 @@ A line starting with `#` is ignored.
 | one or more blank lines | 0.8 s |
 | `---` (scene break) | 2.0 s |
 | `<pause N>` or `<停顿 N>` | exactly N seconds (overrides the above); an error before the first line |
+
+`<pause N>` may also appear inside `TEXT`. It splits the line at that point: each piece is synthesized separately, gets its own subtitle cue, and is followed by N seconds of silence. Use it to time subtitles within a line.
+
+### Time anchors
+`<at T>` or `<时间 T>` on its own line makes the next line start exactly T seconds into the audio. `T` is seconds (`12.5`), `M:SS.s` (`1:05`), or `H:MM:SS.s`. It replaces the pause before that line: the renderer pads silence from the end of the previous line up to T. Anchors must increase, each must be followed by a line, and rendering fails if the previous line has not finished by T.
 
 ### Long lines
 A renderer may split a long `TEXT` at sentence-ending punctuation (`。！？…`). Splits within one line add no pause.

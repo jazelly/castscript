@@ -4,7 +4,7 @@ A plain-text format for multi-voice audiobooks and radio plays, plus a renderer 
 
 - **Write like a script.** One `角色（情绪）：台词` line per utterance; no markup to learn.
 - **Per-character voices.** Clone from a reference WAV, design from a text description, or pick an engine preset.
-- **Emotion, vocal events, pauses.** `（低声，疲惫）`, `[叹气]`, and blank-line / `---` / `<pause N>` timing.
+- **Emotion, vocal events, pauses.** `（低声，疲惫）`, `[叹气]`, blank-line / `---` / `<pause N>` timing, and `<at 1:05>` start times so subtitles line up with video.
 - **Engine-independent, fully local.** The same script renders on any of eleven local TTS engines; outputs MP3 and SRT subtitles.
 - **Web app and menu bar app.** Edit, render, and play scripts in a local web app in English or Chinese, opened from the command line or a macOS menu bar icon.
 

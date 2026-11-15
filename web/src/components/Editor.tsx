@@ -23,14 +23,14 @@ const castscript = StreamLanguage.define<{ lineStart: boolean; speakerDone: bool
       state.lineStart = false;
       if (stream.match(/^\s*#.*/)) return 'comment';
       if (stream.match(/^@voice\b/)) return 'voice';
-      if (stream.match(/^\s*(---|<(pause|停顿)[^>]*>)\s*$/)) return 'event';
+      if (stream.match(/^\s*(---|<(pause|停顿|at|时间)[^>]*>)\s*$/)) return 'event';
       if (stream.match(/^[^：:（()）@#\s][^：:（()）]*?(?=\s*[（(：:])/)) {
         state.speakerDone = true;
         return 'speaker';
       }
     }
     if (state.speakerDone && stream.match(/^[（(][^）)]*[）)]/)) return 'emotion';
-    if (stream.match(/^\[(笑|叹气|咳嗽|清嗓子)\]/)) return 'event';
+    if (stream.match(/^(\[(笑|叹气|咳嗽|清嗓子)\]|<(pause|停顿)[^>]*>)/)) return 'event';
     if (stream.match(/^[：:]/)) {
       state.speakerDone = false;
       return null;

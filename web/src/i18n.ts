@@ -42,7 +42,7 @@ const en = {
   'editor.noVoices': 'No voices yet',
   'editor.syntax': 'Syntax',
   'editor.syntaxBody':
-    '@voice NAME = ref: path.wav | design: description | preset: speaker\nNAME：line   or   NAME（emotion）：line\nVocal events: [笑] [叹气] [咳嗽] [清嗓子]\nPauses: blank line 0.8 s · --- 2 s · <pause 1.5>\n# starts a comment',
+    '@voice NAME = ref: path.wav | design: description | preset: speaker\nNAME：line   or   NAME（emotion）：line\nVocal events: [笑] [叹气] [咳嗽] [清嗓子]\nPauses: blank line 0.8 s · --- 2 s · <pause 1.5> (also inside a line, splits the subtitle)\nStart time: <at 1:05> on its own line, the next line starts at 1:05\n# starts a comment',
 
   'render.title': 'Render',
   'render.engine': 'Engine',
@@ -170,7 +170,7 @@ const zh: Record<Key, string> = {
   'editor.noVoices': '还没有声音',
   'editor.syntax': '语法',
   'editor.syntaxBody':
-    '@voice 名字 = ref: 音频.wav | design: 声音描述 | preset: 预设说话人\n名字：台词   或   名字（情绪）：台词\n语气词：[笑] [叹气] [咳嗽] [清嗓子]\n停顿：空行 0.8 秒 · --- 2 秒 · <停顿 1.5>\n# 开头是注释',
+    '@voice 名字 = ref: 音频.wav | design: 声音描述 | preset: 预设说话人\n名字：台词   或   名字（情绪）：台词\n语气词：[笑] [叹气] [咳嗽] [清嗓子]\n停顿：空行 0.8 秒 · --- 2 秒 · <停顿 1.5>（也可写在台词中间，字幕在此断开）\n时间锚点：单独一行 <时间 1:05>，下一句从 1:05 开始\n# 开头是注释',
 
   'render.title': '渲染',
   'render.engine': '引擎',
